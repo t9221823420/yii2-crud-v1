@@ -29,23 +29,17 @@ class DefaultModel extends \yii\db\ActiveRecord
      */
     public function attributeLabels()
     {
-        return [
-            'id' => 'ID',
-        ];
+	    return $this->attributeEditList();
     }
 	
 	public function attributeIndexList()
 	{
-		return [
-			'id',
-		];
+		return $this->attributeEditList();
 	}
 	
 	public function attributeViewList()
 	{
-		return [
-			'id',
-		];
+		return $this->attributeEditList();
 	}
 	
 	public function attributeCreateList()
@@ -60,9 +54,7 @@ class DefaultModel extends \yii\db\ActiveRecord
 	
 	public function attributeEditList()
 	{
-		return [
-			'id',
-		];
+		return array_diff( array_keys($this->attributes),  $this->primaryKey(true) );;
 	}
     
     /**
