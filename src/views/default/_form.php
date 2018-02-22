@@ -12,7 +12,7 @@ $attributes = $model->attributes;
 
 ?>
 
-<div class="invest-plan-form">
+<div class="crud-form">
 	
 	<?php $form = ActiveForm::begin(); ?>
 	
