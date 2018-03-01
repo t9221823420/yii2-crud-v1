@@ -2,24 +2,8 @@
 
 namespace yozh\crud;
 
-use Yii;
-use yii\base\BootstrapInterface;
+use yozh\base\Bootstrap as BaseBootstrap;
 
-class Bootstrap implements BootstrapInterface
+class Bootstrap extends BaseBootstrap
 {
-	
-	public function bootstrap( $app )
-	{
-		
-		$moduleId = ( ( new \ReflectionObject( $this ) )->getNamespaceName() . '\Module' )::MODULE_ID;
-		
-		$app->getUrlManager()->addRules( [
-			$moduleId => $moduleId . '/default/index',
-		], false )
-		;
-		
-		$app->setModule( $moduleId, 'yozh\\' . $moduleId . '\Module' );
-		
-	}
-	
 }
