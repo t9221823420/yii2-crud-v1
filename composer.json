@@ -14,7 +14,7 @@
   "minimum-stability": "stable",
   "require": {
     "yozh/yii2-base": "@dev",
-    "powerkernel/yii2-tinymce": "*",
+    "powerkernel/yii2-tinymce": "*"
   },
   "extra": {
     "bootstrap": "yozh\\crud\\Bootstrap"
