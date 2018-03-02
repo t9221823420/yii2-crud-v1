@@ -7,6 +7,8 @@ if( !isset($model) && isset($searchModel) ){
 	$model = $searchModel;
 }
 
+$_params_['moduleId'] = $moduleId = $this->context->module->id;
+
 $_params_['actionId'] = $actionId = $this->context->action->id;
 $_params_['actionTitle'] = $actionTitle = Yii::t( 'app', Inflector::camel2words( $this->context->action->id ));
 
@@ -16,3 +18,5 @@ $_params_['modelTitle'] = $modelTitle = Yii::t( 'app', Inflector::camel2words( (
 $this->title                   = "$actionTitle: $modelTitle";
 $this->params['breadcrumbs'][] = [ 'label' => $modelTitle, 'url' => [ 'index' ] ];
 $this->params['breadcrumbs'][] = $actionTitle;
+
+$path = '@yozh/crud/views/default/';

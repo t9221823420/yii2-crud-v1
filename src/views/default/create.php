@@ -7,10 +7,10 @@ include '_header.php';
 /* @var $this yii\web\View */
 
 ?>
-<div class="<?= "$modelId-$actionId" ?>">
+<div class="<?= "$moduleId $modelId-$actionId" ?>">
 
     <h1><?= Html::encode( $this->title ) ?></h1>
 	
-	<?= $this->render( '@yozh/crud/views/default/_form', $_params_ ) ?>
+	<?= $this->render( $path . '_form', $_params_ ) ?>
 
 </div>

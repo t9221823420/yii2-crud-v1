@@ -3,11 +3,10 @@
 namespace yozh\crud\controllers;
 
 use yozh\crud\traits\CRUDTrait;
-use yozh\crud\models\DefaultModel;
+use yozh\crud\models\CRUDModel;
 use yozh\crud\AssetsBundle;
 
-use yii\filters\AccessControl;
-use yii\web\Controller;
+use yozh\base\controllers\DefaultController as Controller;
 
 class DefaultController extends Controller
 {
@@ -18,22 +17,7 @@ class DefaultController extends Controller
 	
 	protected static function primaryModel()
 	{
-		return DefaultModel::className();
-	}
-	
-	public function behaviors()
-	{
-		return [
-			'access' => [
-				'class' => AccessControl::className(),
-				'rules' => [
-					[
-						'allow' => true,
-						'roles' => [ '@' ],
-					],
-				],
-			],
-		];
+		return CRUDModel::className();
 	}
 	
 	public function actionIndex()

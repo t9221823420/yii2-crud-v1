@@ -8,7 +8,7 @@ include '_header.php';
 /* @var $this yii\web\View */
 
 ?>
-<div class="<?= "$modelId-$actionId" ?>">
+<div class="<?= "$moduleId $modelId-$actionId" ?>">
 
     <h1><?= Html::encode( $this->title ) ?></h1>
 

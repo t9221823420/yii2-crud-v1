@@ -7,7 +7,7 @@ use yii\widgets\Pjax;
 include '_header.php';
 
 ?>
-<div class="<?= "$modelId-$actionId" ?>">
+<div class="<?= "$moduleId $modelId-$actionId" ?>">
 
     <h1><?= Html::encode( $this->title ) ?></h1>
 	<?php Pjax::begin(); ?>
