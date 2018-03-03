@@ -142,26 +142,8 @@ trait CRUDTrait
 	public function actionView( $id )
 	{
 		return $this->render( 'view', [
-			'model' => $this->findModel( $id ),
+			'model' => $this->_findModel( $id ),
 		] );
-	}
-	
-	/**
-	 * @param $primaryKey
-	 * @return null|static
-	 * @throws NotFoundHttpException
-	 */
-	protected function findModel( $primaryKey )
-	{
-		
-		/** @var ActiveRecord $primaryModel */
-		$primaryModel = static::primaryModel();
-		
-		if( ( $model = $primaryModel::findOne( $primaryKey ) ) !== null ) {
-			return $model;
-		}
-		
-		throw new NotFoundHttpException( 'The requested page does not exist.' );
 	}
 	
 	public function actionIndex()
@@ -184,7 +166,7 @@ trait CRUDTrait
 	
 	public function actionDelete( $id )
 	{
-		$this->findModel( $id )->delete();
+		$this->_findModel( $id )->delete();
 		
 		return $this->redirect( [ 'index' ] );
 	}
