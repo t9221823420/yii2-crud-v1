@@ -11,6 +11,7 @@ namespace yozh\crud\traits;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
+use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 
@@ -169,6 +170,19 @@ trait CRUDTrait
 		$this->_findModel( $id )->delete();
 		
 		return $this->redirect( [ 'index' ] );
+	}
+	
+	public function actionCopy( $id )
+	{
+		$original = $this->_findModel( $id );
+		
+		$className = $original::className();
+		
+		$copy = new $className( array_diff_assoc( $original->attributes, $original->getPrimaryKey( true ) ) );
+		$copy->save();
+		
+		return $this->redirect( Url::to( array_merge_recursive( [ 'update' ], $copy->getPrimaryKey( true ) ) ) );
+		
 	}
 	
 	

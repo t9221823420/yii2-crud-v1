@@ -18,8 +18,8 @@ $attributes = $model->attributes;
 	
 	<?php $fields = $form->fileds( $model,
 		method_exists( $model, 'attributeEditList' )
-                ? $model->attributeEditList()
-                : array_keys( $model->attributes ),
+			? $model->attributeEditList()
+			: array_keys( $model->attributes ),
 		false
 	);
 	
@@ -34,15 +34,16 @@ $attributes = $model->attributes;
 		]
 	);
 	*/
-    
-    foreach( $fields as $field ) {
-        print $field;
-    }
-
+	
+	foreach( $fields as $field ) {
+		print $field;
+	}
+	
 	?>
 
     <div class="form-group">
-		<?= Html::submitButton( Yii::t( 'app', 'Save'), [ 'class' => 'btn btn-success' ] ) ?>
+		<?= Html::submitButton( Yii::t( 'app', 'Save' ), [ 'class' => 'btn btn-success' ] ) ?>
+		<?= Html::a( Yii::t( 'app', 'Copy' ), array_merge_recursive( [ 'copy' ], $model->getPrimaryKey(true)), [ 'class' => 'btn btn-default' ] ) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>
