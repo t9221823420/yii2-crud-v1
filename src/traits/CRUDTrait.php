@@ -41,19 +41,19 @@ trait CRUDTrait
 	{
 		
 		/**
-		 * @var ActiveRecord $primaryModel
+		 * @var ActiveRecord $defaultModel
 		 * @var array $primaryKey
 		 */
-		$primaryModel = static::primaryModel(); // like app\models\Model
-		$primaryKey   = array_intersect_key( $_GET, array_flip( $primaryModel::primaryKey() ) ); // because of composite key
+		$defaultModel = static::defaultModel(); // like app\models\Model
+		$primaryKey   = array_intersect_key( $_GET, array_flip( $defaultModel::primaryKey() ) ); // because of composite key
 		
 		// Event AFTER_LOAD_PRIMARY_KEY
 		
 		if( empty( $primaryKey ) ) { // create
-			$model = new $primaryModel();
+			$model = new $defaultModel();
 			// Event AFTER_NEW_MODEL
 		}
-		else if( ( $model = $primaryModel::findOne( $primaryKey ) ) !== null ) { // update
+		else if( ( $model = $defaultModel::findOne( $primaryKey ) ) !== null ) { // update
 			// Event AFTER_FIND_MODEL
 		}
 		else {
@@ -150,8 +150,8 @@ trait CRUDTrait
 	public function actionIndex()
 	{
 		
-		$primaryModel = static::primaryModel();
-		$searchModel  = new $primaryModel();
+		$defaultModel = static::defaultModel();
+		$searchModel  = new $defaultModel();
 		
 		/** @var ActiveRecord $searchModel */
 		$dataProvider = new ActiveDataProvider( [

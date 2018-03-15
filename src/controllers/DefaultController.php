@@ -15,7 +15,7 @@ class DefaultController extends Controller
 	}
 	
 	
-	protected static function primaryModel()
+	protected static function defaultModel()
 	{
 		return CRUDModel::className();
 	}
