@@ -13,8 +13,15 @@
   ],
   "minimum-stability": "stable",
   "require": {
+    "kartik-v/yii2-helpers": "@dev",
+    "kartik-v/yii2-icons": "@dev",
+    "kartik-v/yii2-detail-view": "@dev",
+    "kartik-v/yii2-grid": "@dev",
+    "kartik-v/yii2-markdown": "@dev",
+    "kartik-v/bootstrap-fileinput": "@dev",
+    "powerkernel/yii2-tinymce": "*",
     "yozh/yii2-base": "@dev",
-    "powerkernel/yii2-tinymce": "*"
+    "yozh/yii2-form": "@dev"
   },
   "extra": {
     "bootstrap": "yozh\\crud\\Bootstrap"

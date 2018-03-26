@@ -3,7 +3,7 @@
 namespace yozh\crud\controllers;
 
 use yozh\crud\traits\CRUDTrait;
-use yozh\crud\models\CRUDModel;
+use yozh\crud\models\BaseModel;
 use yozh\crud\AssetsBundle;
 
 use yozh\base\controllers\DefaultController as Controller;
@@ -17,7 +17,7 @@ class DefaultController extends Controller
 	
 	protected static function defaultModel()
 	{
-		return CRUDModel::className();
+		return BaseModel::className();
 	}
 	
 	public function actionIndex()

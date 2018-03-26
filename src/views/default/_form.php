@@ -2,7 +2,7 @@
 
 use powerkernel\tinymce\TinyMce;
 use yii\helpers\Html;
-use yozh\crud\components\ActiveForm;
+use yozh\form\components\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\InvestPlan */
