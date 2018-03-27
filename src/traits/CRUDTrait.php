@@ -185,5 +185,21 @@ trait CRUDTrait
 		
 	}
 	
+	public function actionSwitch( $id, $attribute, $value )
+	{
+		$model = $this->findModel( (int)$id );
+		
+		if( isset( $model->$attribute ) ) {
+			
+			$model->setAttribute( $attribute, (int)$value ? false : true );
+			
+			if( $model->save() ) {
+				return $value;
+			}
+		}
+		
+		throw new \yii\web\NotFoundHttpException();
+		
+	}
 	
 }
