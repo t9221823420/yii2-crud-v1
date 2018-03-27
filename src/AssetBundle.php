@@ -2,7 +2,7 @@
 
 namespace yozh\crud;
 
-class AssetsBundle extends \yii\web\AssetBundle
+class AssetBundle extends \yii\web\AssetBundle
 {
 
     public $sourcePath = __DIR__ .'/../assets/';

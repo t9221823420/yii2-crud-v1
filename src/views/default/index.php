@@ -26,7 +26,7 @@ include '_header.php';
 		
 		'columns' => array_merge(
 			method_exists( $model, 'attributeIndexList' ) ? $model->attributeIndexList() : array_keys( $model->attributes ),
-			[ [ 'class' => 'yii\grid\ActionColumn' ] ]
+			[ [ 'class' => yii\grid\ActionColumn::class ] ]
 		),
 		
 		/*
