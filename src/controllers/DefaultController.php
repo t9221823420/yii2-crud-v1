@@ -21,9 +21,13 @@ class DefaultController extends Controller
 	
 	public function actionIndex()
 	{
-		//AssetBundle::register( $this->view );
 		return $this->traitActionIndex();
 	}
 	
+	public function beforeAction( $action )
+	{
+		AssetBundle::register( $this->view );
+		return parent::beforeAction( $action );
+	}
 	
 }
