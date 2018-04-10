@@ -16,7 +16,12 @@ class DefaultController extends Controller
 	
 	protected static function defaultModel()
 	{
-		return BaseModel::className();
+		return BaseModel::class;
+	}
+	
+	protected static function defaultSearchModel()
+	{
+		return BaseModel::class . 'Search';
 	}
 	
 	public function actionIndex()

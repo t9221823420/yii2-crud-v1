@@ -1,13 +1,23 @@
-<?if(0){?><script type='text/javascript'><?}?>
+<?php
 
-<? switch($section) : case 'onload' : ?>
+use yii\helpers\Html;
+use yii\helpers\Url;
 
-$(function() {
+?>
+<?php if( $printTags ?? false ) : ?>
+<script type='text/javascript'><?php endif; ?>
+	
+	<?php switch($section) : case 'one' : ?>
+	<?php break; case 'two' : ?>
+	<?php break; default: ?>
 
-});
+    $(function () {
 
-<? break; case 'crud' : ?>
+        $(document).on('change', 'select.yozh-nested-select', function () {
+            $($(this).data('selector')).load($(this).attr('url'), 'value=' + $(this).val());
+        });
 
-<? break; endswitch; ?>
-
-<?if(0){?></script><?}?>
+    });
+	
+	<?php endswitch; ?>
+	<?php if( $printTags ?? false ) : ?></script><?php endif; ?>

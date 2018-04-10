@@ -14,10 +14,12 @@ use yii\db\ActiveRecord;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yozh\form\traits\ActiveBooleanColumnTrait;
 
 trait CRUDTrait
 {
 	
+	use ActiveBooleanColumnTrait;
 	
 	public function actionEdit()
 	{
@@ -92,7 +94,8 @@ trait CRUDTrait
 					
 					// Event AFTER_SAVE_RECORD
 					
-					return $this->redirect( [ 'index' ] + $model->getPrimaryKey( true ) );
+					//return $this->redirect( [ 'index' ] + $model->getPrimaryKey( true ) );
+					return $this->redirect( [ 'index' ] );
 				}
 				
 			}
@@ -159,7 +162,6 @@ trait CRUDTrait
 		] );
 		
 		return $this->render( 'index', [
-			'model'        => $searchModel,
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		] );
@@ -182,23 +184,6 @@ trait CRUDTrait
 		$copy->save();
 		
 		return $this->redirect( Url::to( array_merge_recursive( [ 'update' ], $copy->getPrimaryKey( true ) ) ) );
-		
-	}
-	
-	public function actionSwitch( $id, $attribute, $value )
-	{
-		$model = $this->findModel( (int)$id );
-		
-		if( isset( $model->$attribute ) ) {
-			
-			$model->setAttribute( $attribute, (int)$value ? false : true );
-			
-			if( $model->save() ) {
-				return $value;
-			}
-		}
-		
-		throw new \yii\web\NotFoundHttpException();
 		
 	}
 	
