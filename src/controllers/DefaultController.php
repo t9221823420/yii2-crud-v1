@@ -8,20 +8,20 @@ use yozh\crud\AssetBundle;
 
 use yozh\base\controllers\DefaultController as Controller;
 
-class DefaultController extends Controller
+abstract class DefaultController extends Controller
 {
 	use CRUDTrait {
 		actionIndex as protected traitActionIndex;
 	}
 	
-	protected static function defaultModel()
-	{
-		return BaseModel::class;
-	}
+	/**
+	 * @return BaseModel::class
+	 */
+	abstract protected static function defaultModel();
 	
 	protected static function defaultSearchModel()
 	{
-		return BaseModel::class . 'Search';
+		return static::defaultModel() . 'Search';
 	}
 	
 	public function actionIndex()
