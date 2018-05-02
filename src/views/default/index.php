@@ -42,6 +42,11 @@ $columns['enabled'] = [
 		//'filterModel' => $searchModel,
 		'tableOptions' => [ 'class' => 'table table-striped table-hover', ],
 		
+		'formatter' => [
+			'class' => yii\i18n\Formatter::class,
+			'nullDisplay' => '',
+		],
+		
 		'columns' => $columns,
 	] ); ?>
  
