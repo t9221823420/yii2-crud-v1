@@ -25,6 +25,7 @@ abstract class BaseModel extends ActiveRecord
 	}
 	*/	
 	
+	/*
 	public static function getList( $condition = [] )
 	{
 		
@@ -41,5 +42,6 @@ abstract class BaseModel extends ActiveRecord
 		
 		return static::getListQuery( $condition, null, $value )->column();
 	}
-
+	*/
+	
 }
