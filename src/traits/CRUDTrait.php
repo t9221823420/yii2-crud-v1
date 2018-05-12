@@ -14,6 +14,7 @@ use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
 use yozh\crud\models\BaseModel as ActiveRecord;
+use yozh\form\interfaces\AttributeActionListInterface;
 use yozh\form\traits\ActiveBooleanColumnTrait;
 
 trait CRUDTrait
@@ -47,11 +48,17 @@ trait CRUDTrait
 		if( $result instanceof Response ) { //
 			return $result;
 		}
-		else if( $result instanceof ActiveRecord ) { //
+		else if( $result ) { //
 			
-			return $this->render( 'create', [
-				'model' => $result,
-			] );
+			if ( $result instanceof \yii\db\ActiveRecord ){
+
+				return $this->render( 'create', [
+					'model' => $result,
+				] );
+			
+			}
+			
+			throw new \yii\base\ErrorException(get_class( $result ) . " have to be extends \yii\db\ActiveRecord" );
 			
 		}
 		else {
@@ -67,11 +74,17 @@ trait CRUDTrait
 		if( $result instanceof Response ) { //
 			return $result;
 		}
-		else if( $result instanceof ActiveRecord ) { //
+		else if( $result ) { //
 			
-			return $this->render( 'update', [
-				'model' => $result,
-			] );
+			if ( $result instanceof \yii\db\ActiveRecord ){
+				
+				return $this->render( 'update', [
+					'model' => $result,
+				] );
+				
+			}
+			
+			throw new \yii\base\ErrorException(get_class( $result ) . " have to be extends \yii\db\ActiveRecord" );
 			
 		}
 		else {
