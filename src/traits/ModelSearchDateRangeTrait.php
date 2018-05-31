@@ -13,5 +13,4 @@ class ModelSearchDateRangeTrait
 	public $filter_dateFrom;
 	public $filter_dateTo;
 	
-	
 }

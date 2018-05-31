@@ -13,6 +13,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
 use yii\web\NotFoundHttpException;
 use yii\web\Response;
+use yozh\crud\interfaces\ActiveRecordSearchInterface;
 use yozh\crud\models\BaseModel as ActiveRecord;
 use yozh\form\interfaces\AttributeActionListInterface;
 use yozh\form\traits\ActiveBooleanColumnTrait;
@@ -21,6 +22,18 @@ trait CRUDTrait
 {
 	
 	use ActiveBooleanColumnTrait;
+	
+	protected static function _defaultSearchModelClass()
+	{
+		$defaultModelClass = static::defaultModelClass();
+		
+		if( class_exists( $defaultModelClass . 'Search' )
+			&& ( new \ReflectionClass( $defaultModelClass . 'Search' ) )->implementsInterface( ActiveRecordSearchInterface::class )
+		) {
+			return $defaultModelClass . 'Search';
+		}
+		
+	}
 	
 	public function actionEdit()
 	{
@@ -31,13 +44,12 @@ trait CRUDTrait
 		}
 		else if( $result instanceof ActiveRecord ) { //
 			
-			return $this->render( 'edit', [
+			return $this->_render( 'edit', [
 				'model' => $result,
 			] );
 			
 		}
 		
-		return;
 	}
 	
 	public function actionCreate()
@@ -50,15 +62,15 @@ trait CRUDTrait
 		}
 		else if( $result ) { //
 			
-			if ( $result instanceof \yii\db\ActiveRecord ){
-
-				return $this->render( 'create', [
+			if( $result instanceof \yii\db\ActiveRecord ) {
+				
+				return $this->_render( 'create', [
 					'model' => $result,
 				] );
-			
+				
 			}
 			
-			throw new \yii\base\ErrorException(get_class( $result ) . " have to be extends \yii\db\ActiveRecord" );
+			throw new \yii\base\ErrorException( get_class( $result ) . " have to be extends \yii\db\ActiveRecord" );
 			
 		}
 		else {
@@ -76,15 +88,15 @@ trait CRUDTrait
 		}
 		else if( $result ) { //
 			
-			if ( $result instanceof \yii\db\ActiveRecord ){
+			if( $result instanceof \yii\db\ActiveRecord ) {
 				
-				return $this->render( 'update', [
+				return $this->_render( 'update', [
 					'model' => $result,
 				] );
 				
 			}
 			
-			throw new \yii\base\ErrorException(get_class( $result ) . " have to be extends \yii\db\ActiveRecord" );
+			throw new \yii\base\ErrorException( get_class( $result ) . " have to be extends \yii\db\ActiveRecord" );
 			
 		}
 		else {
@@ -95,23 +107,32 @@ trait CRUDTrait
 	
 	public function actionView( $id )
 	{
-		return $this->render( 'view', [
+		return $this->_render( 'view', [
 			'model' => $this->_findModel( $id ),
 		] );
 	}
 	
 	public function actionIndex()
 	{
-		
-		$defaultModel = static::defaultModel();
-		$searchModel  = new $defaultModel();
-		
 		/** @var ActiveRecord $searchModel */
-		$dataProvider = new ActiveDataProvider( [
-			'query' => $searchModel::find(),
-		] );
 		
-		return $this->render( 'index', [
+		$defaultModelClass = static::defaultModelClass();
+		
+		if( $searchModelClass = static::_defaultSearchModelClass() ) {
+			$searchModel  = new $searchModelClass;
+			$dataProvider = $searchModel->search( Yii::$app->request->queryParams );
+		}
+		else {
+			
+			$searchModel = new $defaultModelClass;
+			
+			$dataProvider = new ActiveDataProvider( [
+				'query' => $searchModel::find(),
+			] );
+			
+		}
+		
+		return $this->_render( 'index', [
 			'searchModel'  => $searchModel,
 			'dataProvider' => $dataProvider,
 		] );
@@ -142,7 +163,7 @@ trait CRUDTrait
 				$result->$attribute = null;
 			}
 			
-			return $this->render( 'update', [
+			return $this->_render( 'update', [
 				'model' => $result,
 			] );
 			
@@ -156,21 +177,21 @@ trait CRUDTrait
 	protected function _action( ActiveRecord $Model = null )
 	{
 		/**
-		 * @var ActiveRecord $defaultModel
+		 * @var ActiveRecord $defaultModelClass
 		 * @var array $primaryKey
 		 */
-		$defaultModel = static::defaultModel(); // like app\models\Model
-		$primaryKey   = array_intersect_key( $_GET, array_flip( $defaultModel::primaryKey() ) ); // because of composite key
+		$defaultModelClass = static::defaultModelClass(); // like app\models\Model
+		$primaryKey        = array_intersect_key( $_GET, array_flip( $defaultModelClass::primaryKey() ) ); // because of composite key
 		
 		// Event AFTER_LOAD_PRIMARY_KEY
 		
 		if( !$Model ) {
 			
 			if( empty( $primaryKey ) ) { // create
-				$Model = new $defaultModel();
+				$Model = new $defaultModelClass();
 				// Event AFTER_NEW_MODEL
 			}
-			else if( ( $Model = $defaultModel::findOne( $primaryKey ) ) !== null ) { // update
+			else if( ( $Model = $defaultModelClass::findOne( $primaryKey ) ) !== null ) { // update
 				// Event AFTER_FIND_MODEL
 			}
 			else {
@@ -212,7 +233,20 @@ trait CRUDTrait
 					// Event AFTER_SAVE_RECORD
 					
 					//return $this->redirect( [ 'index' ] + $Model->getPrimaryKey( true ) );
-					return $this->redirect( [ 'index' ] );
+					
+					if( Yii::$app->request->isAjax ) {
+						
+						$Response = Yii::$app->getResponse();
+						
+						$Response->format = Response::FORMAT_JSON;
+						$Response->data   = true;
+						
+						return $Response;
+					}
+					else {
+						return $this->redirect( [ 'index' ] );
+					}
+					
 				}
 				
 			}
@@ -221,6 +255,28 @@ trait CRUDTrait
 		// Event BEFORE_RENDER
 		
 		return $Model;
+		
+	}
+	
+	protected function _render( $view, $params = [] )
+	{
+		if( Yii::$app->request->isAjax ) {
+			return $this->renderAjax( $view, $params );
+		}
+		else {
+			return $this->render( $view, $params );
+		}
+	}
+	
+	protected function _renderSelectItems( $items )
+	{
+		$output = '<option>' . Yii::t( 'app', 'Select' ) . '</option>';
+		
+		foreach( $items as $optionValue => $optionLabel ) {
+			$output .= "<option value=\"$optionValue\">$optionLabel</option>";
+		}
+		
+		return $output;
 		
 	}
 	
