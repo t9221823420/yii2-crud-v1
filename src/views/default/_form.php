@@ -20,7 +20,7 @@ $attributes = $model->attributes;
 		method_exists( $model, 'attributeEditList' )
 			? $model->attributeEditList()
 			: array_keys( $model->attributes ),
-		false
+		[ 'print' => false, ]
 	);
 	
 	/*
