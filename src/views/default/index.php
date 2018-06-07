@@ -3,53 +3,110 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
+use yii\helpers\Url;
+use yozh\widget\widgets\Modal;
+use yozh\widget\widgets\ActiveButton;
 
 include '_header.php';
 
-$columns = array_merge(
-	method_exists( $model, 'attributeIndexList' )
-		? $model->attributeIndexList()
-		: array_keys( $model->attributes ),
-	[
-		[
-			'class'    => yii\grid\ActionColumn::class,
-			'header'   => Yii::t( 'app', 'Actions' ),
-			'template' => '{view}{update}{delete}',
-		],
-	] );
+/**
+ * @var \yozh\crud\models\BaseModel $model
+ */
+$columns = $model->attributeIndexList();
 
-/*
-$columns['enabled'] = [
-	'attribute' => 'enabled',
-	'class'     => \yozh\form\components\ActiveBooleanColumn::class,
-];
-*/
+array_push( $columns, [
+		'class'          => 'yii\grid\ActionColumn',
+		'header'         => 'Actions',
+		'contentOptions' => [ 'class' => 'actions' ],
+		'template'       => '{update}{delete}',
+		'buttons'        => [
+			
+			'update' => function( $url, $model ) {
+				
+				return ActiveButton::widget( [
+					'label'       => '<span class="glyphicon glyphicon-pencil"></span>',
+					'encodeLabel' => false,
+					'tagName'     => 'a',
+					'action'      => '_update',
+					'options'     => [
+						//'class' => 'btn btn-success',
+					],
+					
+					'model'      => $model,
+					'attributes' => [ 'id', ],
+				
+				] );
+				
+				return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, [
+					'title' => Yii::t( 'app', 'Update' ),
+				] );
+			},
+			
+			/*
+			'delete' => function( $url, $model ) {
+				return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [
+					'title'       => Yii::t( 'app', 'Delete' ),
+					'data-method' => 'post',
+				] );
+			},
+		
+				*/
+		],
+		
+		/*
+		'urlCreator' => function( $action, $model, $key, $index ) {
+			
+			$classname = strtolower( ( new\ReflectionObject( $model ) )->getShortName() );
+			
+			return Url::to( "/$classname/{$model->id}/$action" );
+		}
+		*/
+	]
+
+);
 
 ?>
-<div class="<?= "$moduleId $modelId-$actionId" ?>">
+
+<?= $this->render( '_search', $_params_ ); ?>
+
+<div class="<?= "$modelId-$actionId" ?>">
 
     <h1><?= Html::encode( $this->title ) ?></h1>
-	<?php Pjax::begin(); ?>
- 
-	<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-		<?= Html::a( Yii::t( 'app', 'Create ' ) . $modelTitle, [ 'create' ], [ 'class' => 'btn btn-primary' ] ) ?>
+		<?= Modal::widget( [
+			'id'           => Modal::PLUGIN_ID,
+			'ajaxSubmit'   => true,
+			'header'       => Yii::t( 'app', 'Add new' ),
+			'footer'       => false,
+			'toggleButton' => ActiveButton::widget( [
+				'type'        => ActiveButton::TYPE_YES,
+				'label'       => Yii::t( 'app', 'Add' ),
+				'action'      => '_create',
+			] ),
+		] ); ?>
     </p>
+	
+	<?php Pjax::begin( [ 'id' => 'pjax-container' ] ); ?>
+	
+	<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 	
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
 		//'filterModel' => $searchModel,
-		'tableOptions' => [ 'class' => 'table table-striped table-hover', ],
-		
-		'formatter' => [
-			'class' => yii\i18n\Formatter::class,
-			'nullDisplay' => '',
+		//'layout'       => "{items}\n{pager}",
+		//'showHeader'   => false,
+		'tableOptions' => [
+			'class' => 'table table-striped table-hover',
 		],
 		
 		'columns' => $columns,
+	
 	] ); ?>
- 
+	
 	<?php Pjax::end(); ?>
- 
+
 </div>
+
+<?php $this->registerJs( $this->render( '_js.php', [ 'section' => 'onload' ] ), $this::POS_END ); ?>
+<?php $this->registerJs( $this->render( '_js.php', [ 'section' => 'modal' ] ), $this::POS_END ); ?>

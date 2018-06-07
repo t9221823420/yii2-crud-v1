@@ -8,7 +8,7 @@ include '_header.php';
 /* @var $this yii\web\View */
 
 ?>
-<div class="<?= "$moduleId $modelId-$actionId" ?>">
+<div class="<?= "$modelId-$actionId" ?>">
 
     <h1><?= Html::encode( $this->title ) ?></h1>
 
@@ -27,4 +27,3 @@ include '_header.php';
 		'model'      => $model,
 		'attributes' => array_keys( $model->attributes ),
 	] ) ?>
-</div>

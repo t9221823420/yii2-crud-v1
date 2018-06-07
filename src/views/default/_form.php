@@ -1,49 +1,66 @@
 <?php
 
-use powerkernel\tinymce\TinyMce;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yozh\form\ActiveForm;
+use yozh\form\ActiveField;
 
-/* @var $this yii\web\View */
-/* @var $model common\models\InvestPlan */
-/* @var $form yii\widgets\ActiveForm */
+/*
+$inputs = [];
 
-$attributes = $model->attributes;
+foreach( ActiveField::getInputs() as $name => $item ) {
+	$inputs[ $name ] = $item['label'];
+}
+
+$widgets = [];
+
+if( $model->type ) {
+	foreach( ActiveField::getWidgets( $model->type ) as $name => $item ) {
+		$widgets[ $name ] = $item['label'];
+	}
+}
+
+$fields = function( $form ) use ( $model, $inputs, $widgets ) {
+	
+    $foo = $form->field( $model, 'name' );
+    
+	return [
+		
+		'name' => $form->field( $model, 'name' ),
+		
+		'type' => $form->field( $model, 'type' )->dropDownList( $inputs, [
+			'class'           => 'form-control yozh-widget yozh-widget-nested-select',
+			'url'             => Url::to( [ 'get-widgets-list' ] ),
+			'nested-selector' => '#' . Html::getInputId( $model, 'widget' ),
+			'prompt'          => Yii::t( 'app', 'Select' ),
+		] ),
+		
+		'widget' => $form->field( $model, 'widget' )->dropDownList( $widgets, [
+			'class'  => 'form-control',
+			'prompt' => Yii::t( 'app', 'Select' ),
+		] ),
+		
+		'config' => $form->field( $model, 'config' )->baseWidget( ActiveField::WIDGET_TYPE_TEXTAREA ),
+		
+		'data' => $form->field( $model, 'data' )->baseWidget( $model->widget ),
+	
+	];
+};
+*/
+
 
 ?>
 
-<div class="crud-form">
+<div class="">
 	
 	<?php $form = ActiveForm::begin(); ?>
 	
-	<?php $fields = $form->fields( $model,
-		method_exists( $model, 'attributeEditList' )
-			? $model->attributeEditList()
-			: array_keys( $model->attributes ),
-		[ 'print' => false, ]
-	);
-	
-	/*
-	$fields['body'] = $form->field( $model, 'body' )->widget(
-		TinyMce::className(),
-		[
-			'options' => [
-				'id'   => 'editor',
-				'rows' => 10,
-			],
-		]
-	);
-	*/
-	
-	foreach( $fields as $field ) {
-		print $field;
-	}
-	
-	?>
+	<?php $fields = $form->fields( $model, $model->attributeEditList()
+		//,[ 'print' => false, ]
+	);?>
 
     <div class="form-group">
 		<?= Html::submitButton( Yii::t( 'app', 'Save' ), [ 'class' => 'btn btn-success' ] ) ?>
-		<?= Html::a( Yii::t( 'app', 'Copy' ), array_merge_recursive( [ 'copy' ], $model->getPrimaryKey(true)), [ 'class' => 'btn btn-default' ] ) ?>
     </div>
 	
 	<?php ActiveForm::end(); ?>

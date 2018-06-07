@@ -258,16 +258,6 @@ trait CRUDTrait
 		
 	}
 	
-	protected function _render( $view, $params = [] )
-	{
-		if( Yii::$app->request->isAjax ) {
-			return $this->renderAjax( $view, $params );
-		}
-		else {
-			return $this->render( $view, $params );
-		}
-	}
-	
 	protected function _renderSelectItems( $items )
 	{
 		$output = '<option>' . Yii::t( 'app', 'Select' ) . '</option>';

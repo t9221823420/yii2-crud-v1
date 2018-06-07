@@ -1,43 +1,65 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\helpers\Url;
+use yozh\form\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $form yii\widgets\ActiveForm */
+
+//$searchModel = $searchModel ?? new \backend\modules\prosell\models\prosell\OrderSearch();
+
 ?>
 
-<div class="travel-report-search">
+<style>
 
-    <?php $form = ActiveForm::begin([
-        'action' => ['index'],
-        'method' => 'get',
-        'options' => [
-            'data-pjax' => 1
-        ],
-    ]); ?>
+    .panel.search .panel-heading .form-item,
+    .panel.search .panel-heading .form-control,
+    .common-search > * {
+        display: inline-block;
+    }
 
-    <?= $form->field($model, 'id') ?>
+    .panel.search .panel-heading .form-control.btn,
+    .common-search .form-control.btn {
+        margin-left: 10px;
+        width: auto;
+    }
 
-    <?= $form->field($model, '_deleted') ?>
+    .common-search,
+    .advanced-search,
+    .advanced-search > .panel-group {
+        position: relative;
+        width: 100%;
+    }
 
-    <?= $form->field($model, 'begin') ?>
+</style>
 
-    <?= $form->field($model, 'end') ?>
+<?php if( $searchModel->filter_search ?? false ): ?>
+	
+	<?php $form = ActiveForm::begin( [
+		//'id'     => 'search-form',
+		//'action' => Url::to( [ 'search' ] ),
+		'method' => 'get',
+	] ); ?>
 
-    <?= $form->field($model, 'vehicle_id') ?>
 
-    <?php // echo $form->field($model, 'odometr') ?>
+    <div class="w-100 valign-bottom-container inline-block-container form-group">
 
-    <?php // echo $form->field($model, 'project_id') ?>
+        <div class="common-search">
+			<?= $form->field( $searchModel, 'filter_search', [
+				'options' => [
+					'class'  => 'w-50 form-item',
+					'prompt' => Yii::t( 'app', 'Name' ),
+				],
+			] )
+			         ->label( false ) ?>
+			
+			<?= Html::submitButton( Yii::t( 'app', 'Search' ), [ 'class' => 'btn btn-success form-control' ] ) ?>
 
-    <?php // echo $form->field($model, 'engineers') ?>
+        </div>
 
-    <div class="form-group">
-        <?= Html::submitButton(Yii::t( 'app', 'Search'), ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton(Yii::t( 'app', 'Reset'), ['class' => 'btn btn-default']) ?>
     </div>
+	
+	<?php ActiveForm::end(); ?>
 
-    <?php ActiveForm::end(); ?>
-
-</div>
+<?php endif; ?>
