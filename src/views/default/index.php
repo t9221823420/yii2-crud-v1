@@ -1,9 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
-use yii\helpers\Url;
 use yozh\widget\widgets\Modal;
 use yozh\widget\widgets\ActiveButton;
 
@@ -72,20 +72,25 @@ array_push( $columns, [
 <div class="<?= "$modelId-$actionId" ?>">
 
     <h1><?= Html::encode( $this->title ) ?></h1>
+	
+	<?php if( !(isset($searchModel) && Yii::$app->request->get( $searchModel->formName() )) ): ?>
 
-    <p>
-		<?= Modal::widget( [
-			'id'           => Modal::PLUGIN_ID,
-			'ajaxSubmit'   => true,
-			'header'       => Yii::t( 'app', 'Add new' ),
-			'footer'       => false,
-			'toggleButton' => ActiveButton::widget( [
-				'type'        => ActiveButton::TYPE_YES,
-				'label'       => Yii::t( 'app', 'Add' ),
-				'action'      => '_create',
-			] ),
-		] ); ?>
-    </p>
+        <p>
+			<?= Modal::widget( [
+				'id'           => Modal::PLUGIN_ID,
+				'ajaxSubmit'   => true,
+				'header'       => Yii::t( 'app', 'Add new' ),
+				'footer'       => false,
+				'toggleButton' => ActiveButton::widget( [
+					'type'        => ActiveButton::TYPE_YES,
+					'label'       => Yii::t( 'app', 'Add' ),
+					'action'      => '_create',
+				] ),
+			] ); ?>
+        </p>
+	
+	<?php endif; ?>
+ 
 	
 	<?php Pjax::begin( [ 'id' => 'pjax-container' ] ); ?>
 	

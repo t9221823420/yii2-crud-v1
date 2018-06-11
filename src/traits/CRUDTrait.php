@@ -112,8 +112,7 @@ trait CRUDTrait
 		] );
 	}
 	
-	public function actionIndex()
-	{
+	protected function _actionIndexPreprocess(){
 		/** @var ActiveRecord $searchModel */
 		
 		$defaultModelClass = static::defaultModelClass();
@@ -131,6 +130,16 @@ trait CRUDTrait
 			] );
 			
 		}
+		
+		return [
+			'searchModel'  => $searchModel,
+			'dataProvider' => $dataProvider,
+		];
+	}
+	
+	public function actionIndex()
+	{
+		extract( $this->_actionIndexPreprocess() );
 		
 		return $this->_render( 'index', [
 			'searchModel'  => $searchModel,
