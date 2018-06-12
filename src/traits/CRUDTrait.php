@@ -23,7 +23,7 @@ trait CRUDTrait
 	
 	use ActiveBooleanColumnTrait;
 	
-	protected static function _defaultSearchModelClass()
+	public static function defaultSearchModelClass()
 	{
 		$defaultModelClass = static::defaultModelClass();
 		
@@ -117,7 +117,7 @@ trait CRUDTrait
 		
 		$defaultModelClass = static::defaultModelClass();
 		
-		if( $searchModelClass = static::_defaultSearchModelClass() ) {
+		if( $searchModelClass = static::defaultSearchModelClass() ) {
 			$searchModel  = new $searchModelClass;
 			$dataProvider = $searchModel->search( Yii::$app->request->queryParams );
 		}
