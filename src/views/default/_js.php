@@ -13,52 +13,65 @@ use yii\helpers\Url;
 	
 	$( function () {
 		
-		$( '#' + yozh.Modal.pluginId ).on( yozh.Modal.EVENT_SUBMIT, function () {
-			$.pjax.reload( { container : '#pjax-container', async : false } );
-		} );
-		
 	} );
 	
 	<?php break; case 'modal' : ?>
 	
+    var <?= $jsId ?> = {
+    	
+    	id : '<?= $jsId ?>',
+    
+		confirm : function ( _$target, _config ) {
+			
+			var _deferred = yozh.Modal.helpers.confirm( _$target, _config );
+			
+			return _deferred;
+		},
+		
+		done : function ( _response, _status, xhr, _$target ) {
+			
+			/*
+			$( '#selector' + _$target.data( 'id' ) ).find( '.icon' )
+				.removeClass( 'icon-status-new' )
+				.addClass( 'icon-status-close' )
+			;
+			
+			_$target.parent().html( _response );
+			*/
+			
+		},
+		
+		create : function ( _$target ) {
+			
+			$( '#<?= $modalId ?>' ).yozhModal( {
+				url : '<?= Url::to( [ 'create?' ] ) ?>' + $.param( _$target.data() )
+			} ).show();
+			
+		},
+		
+		update : function ( _$target ) {
+			
+			$( '#<?= $modalId ?>' ).yozhModal( {
+				url : '<?= Url::to( [ 'update?' ] ) ?>' + $.param( _$target.data() ),
+			} ).show();
+			
+		},
+    };
+    
+    console.log(<?= $jsId ?>);
 	
-	var _confirm = function ( _$target, _config ) {
+	$( function () {
 		
-		var _deferred = yozh.Modal.helpers.confirm( _$target, _config );
+		$( '#<?= $modalId ?>' ).one( yozh.Modal.EVENT_SUBMIT, function ( _response, status, xhr ) {
+			$.pjax.reload( {
+                container : '#<?= $pjaxId ?>',
+                async : false,
+			} );
+		} );
 		
-		return _deferred;
-	}
-	
-	var _done = function ( _response, _status, xhr, _$target ) {
-		
-		/*
-		$( '#selector' + _$target.data( 'id' ) ).find( '.icon' )
-			.removeClass( 'icon-status-new' )
-			.addClass( 'icon-status-close' )
-		;
-		
-		_$target.parent().html( _response );
-		*/
-		
-	}
-	
-	var _create = function ( _$target ) {
-		
-		$( '#' + yozh.Modal.pluginId ).yozhModal( {
-			url : '<?= Url::to( [ 'create' ] ) ?>'
-		} ).show();
-		
-	}
-	
-	var _update = function ( _$target ) {
-		
-		$( '#' + yozh.Modal.pluginId ).yozhModal( {
-			url : '<?= Url::to( [ 'update?id=' ] ) ?>' + _$target.data('id')
-		} ).show();
-		
-	}
-	
-	<?php break; case 'template' : ?>
+	} );
+
+    <?php break; case 'template' : ?>
 	
 	
 	<?php break; default: ?>

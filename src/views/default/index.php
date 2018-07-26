@@ -2,103 +2,59 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yii\grid\GridView;
+use yozh\widget\widgets\grid\GridView;
 use yii\widgets\Pjax;
 use yozh\widget\widgets\Modal;
 use yozh\widget\widgets\ActiveButton;
-
-include '_header.php';
+use yozh\crud\controllers\DefaultController as CRUDController;
 
 /**
- * @var \yozh\crud\models\BaseModel $model
+ * @var $this \yii\web\View
  */
-$columns = $model->attributeIndexList();
 
-array_push( $columns, [
-		'class'          => 'yii\grid\ActionColumn',
-		'header'         => 'Actions',
-		'contentOptions' => [ 'class' => 'actions' ],
-		'template'       => '{update}{delete}',
-		'buttons'        => [
-			
-			'update' => function( $url, $model ) {
-				
-				return ActiveButton::widget( [
-					'label'       => '<span class="glyphicon glyphicon-pencil"></span>',
-					'encodeLabel' => false,
-					'tagName'     => 'a',
-					'action'      => '_update',
-					'options'     => [
-						//'class' => 'btn btn-success',
-					],
-					
-					'model'      => $model,
-					'attributes' => [ 'id', ],
-				
-				] );
-				
-				return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, [
-					'title' => Yii::t( 'app', 'Update' ),
-				] );
-			},
-			
-			/*
-			'delete' => function( $url, $model ) {
-				return Html::a( '<span class="glyphicon glyphicon-trash"></span>', $url, [
-					'title'       => Yii::t( 'app', 'Delete' ),
-					'data-method' => 'post',
-				] );
-			},
-		
-				*/
-		],
-		
-		/*
-		'urlCreator' => function( $action, $model, $key, $index ) {
-			
-			$classname = strtolower( ( new\ReflectionObject( $model ) )->getShortName() );
-			
-			return Url::to( "/$classname/{$model->id}/$action" );
-		}
-		*/
-	]
+include __DIR__ . '/_header.php';
 
-);
+$columns = $columns ?? $searchModel->attributesIndexList();
+
+if( $nestedRequest ) {
+	$nestedAttributes[ CRUDController::PARAM_NESTED ] = 1;
+}
 
 ?>
 
-<?= $this->render( '_search', $_params_ ); ?>
-
 <div class="<?= "$modelId-$actionId" ?>">
-
-    <h1><?= Html::encode( $this->title ) ?></h1>
 	
-	<?php if( !(isset($searchModel) && Yii::$app->request->get( $searchModel->formName() )) ): ?>
+	<?php if( !Yii::$app->request->isAjax ): ?>
+		
+		<?= $this->render( '_search', $_params_ ); ?>
 
-        <p>
-			<?= Modal::widget( [
-				'id'           => Modal::PLUGIN_ID,
-				'ajaxSubmit'   => true,
-				'header'       => Yii::t( 'app', 'Add new' ),
-				'footer'       => false,
-				'toggleButton' => ActiveButton::widget( [
-					'type'        => ActiveButton::TYPE_YES,
-					'label'       => Yii::t( 'app', 'Add' ),
-					'action'      => '_create',
-				] ),
-			] ); ?>
-        </p>
+        <h1><?= Html::encode( $this->title ) ?></h1>
 	
 	<?php endif; ?>
- 
 	
-	<?php Pjax::begin( [ 'id' => 'pjax-container' ] ); ?>
-	
-	<?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+	<?php Pjax::begin( [
+		'id' => $pjaxId = 'pjax' . $jsId,
+		//'timeout' => 10000,
+	] ); ?>
+
+    <p>
+		<?= Modal::widget( [
+			'id'           => $modalId = 'modal' . $jsId,
+			'ajaxSubmit'   => true,
+			'header'       => Yii::t( 'app', 'Add new' ),
+			'footer'       => false,
+			'toggleButton' => ActiveButton::widget( [
+				'type'   => ActiveButton::TYPE_YES,
+				'label'  => Yii::t( 'app', 'Add' ),
+				'action' => $jsId . '.create',
+				'data'   => $nestedAttributes ?? [],
+			] ),
+		] ); ?>
+    </p>
 	
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
-		//'filterModel' => $searchModel,
+		'filterModel'  => $nestedRequest ? null : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface ? $searchModel : null,
 		//'layout'       => "{items}\n{pager}",
 		//'showHeader'   => false,
 		'tableOptions' => [
@@ -109,9 +65,14 @@ array_push( $columns, [
 	
 	] ); ?>
 	
+	<?php $this->registerJs( $this->render( '_js.php', [
+		'section' => 'modal',
+		'jsId'    => $jsId,
+		'modalId' => $modalId,
+		'pjaxId'  => $pjaxId,
+	] ), $this::POS_END ); ?>
+	
 	<?php Pjax::end(); ?>
 
 </div>
 
-<?php $this->registerJs( $this->render( '_js.php', [ 'section' => 'onload' ] ), $this::POS_END ); ?>
-<?php $this->registerJs( $this->render( '_js.php', [ 'section' => 'modal' ] ), $this::POS_END ); ?>

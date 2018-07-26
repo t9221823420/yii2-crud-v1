@@ -2,9 +2,9 @@
 	
 	$( '.filters' ).on( 'change', 'input', function () {
 		
+		/*
 		this.form.submit();
 		
-		/*
 		var _$form = $( this.form );
 		var _formData = new FormData( this.form );
 		

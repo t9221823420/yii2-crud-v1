@@ -64,7 +64,7 @@ AssetBundle::register( $this );
 	'method' => 'get',
 ] ); ?>
 
-<?php if( $searchModel->filter_search ?? false ): ?>
+<?php if( property_exists ( $searchModel, 'filter_search' ) ): ?>
 
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">

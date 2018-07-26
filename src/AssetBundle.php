@@ -17,7 +17,7 @@ class AssetBundle extends \yii\web\AssetBundle
 	];
 	
 	public $depends = [
-		\yozh\base\AssetBundle::class,
+		\yozh\form\AssetBundle::class,
 	];
 	
 	public $publishOptions = [

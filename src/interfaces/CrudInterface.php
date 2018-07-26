@@ -15,4 +15,6 @@ interface CrudInterface
 	 */
 	public static function defaultModelClass();
 	
+	//public Fstatic function defaultModelSearchClass();
+	
 }

@@ -3,7 +3,7 @@
 use yii\helpers\Html;
 use yii\widgets\DetailView;
 
-include '_header.php';
+include __DIR__ . '/_header.php';
 
 /* @var $this yii\web\View */
 
@@ -13,8 +13,8 @@ include '_header.php';
     <h1><?= Html::encode( $this->title ) ?></h1>
 
     <p>
-		<?= Html::a( Yii::t( 'app', 'Update'), [ 'update', 'id' => $model->id ], [ 'class' => 'btn btn-primary' ] ) ?>
-		<?= Html::a( Yii::t( 'app', 'Delete'), [ 'delete', 'id' => $model->id ], [
+		<?= Html::a( Yii::t( 'app', 'Update'), [ 'update', 'id' => $Model->id ], [ 'class' => 'btn btn-primary' ] ) ?>
+		<?= Html::a( Yii::t( 'app', 'Delete'), [ 'delete', 'id' => $Model->id ], [
 			'class' => 'btn btn-danger',
 			'data'  => [
 				'confirm' => Yii::t( 'app', 'Are you sure you want to delete this item?'),
@@ -24,6 +24,6 @@ include '_header.php';
     </p>
 	
 	<?= DetailView::widget( [
-		'model'      => $model,
-		'attributes' => array_keys( $model->attributes ),
+		'model'      => $Model,
+		'attributes' => array_keys( $Model->attributes ),
 	] ) ?>

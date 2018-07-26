@@ -2,10 +2,9 @@
 
 use yii\helpers\Html;
 
-include '_header.php';
+include __DIR__ . '/_header.php';
 
-/* @var $this yii\web\View */
-
+include( Yii::getAlias($parentViewPath . '/_header.php') );
 ?>
 <div class="<?= "$modelId-$actionId" ?>">
 

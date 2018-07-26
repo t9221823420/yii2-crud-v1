@@ -6,42 +6,15 @@ use yozh\form\models\BaseModel as ActiveRecord;
 
 abstract class BaseModel extends ActiveRecord
 {
-
 	/*
-	protected static $_list;
-	
-	public static function getList()
+	public function attributesDefaultList( ?array $only = null, ?array $except = null, ?bool $schemaOnly = false )
 	{
-		if( !static::$_list ){
-			static::$_list = static::getListQuery()
-			                       ->enabledOnly()
-			                       ->notDeleted()
-			                       ->column()
-			;
+		if( !(is_array( $except ) && count( $except ) === 0) ) {
+			$except = array_merge( $this->primaryKey( true ), $except ?? [] );
 		}
 		
-		return static::$_list;
+		return parent::attributesDefaultList( $only, $except, $schemaOnly );
 		
-	}
-	*/	
-	
-	/*
-	public static function getList( $condition = [] )
-	{
-		
-		$attributes = static::getTableSchema()->columns;
-		
-		$value = null;
-		
-		if( !$value && isset( $attributes['name'] ) ) {
-			$value = 'name';
-		}
-		if( !$value && isset( $attributes['title'] ) ) {
-			$value = 'title';
-		}
-		
-		return static::getListQuery( $condition, null, $value )->column();
 	}
 	*/
-	
 }
