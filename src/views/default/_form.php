@@ -56,12 +56,21 @@ $fields = function( $form ) use ( $Model, $inputs, $widgets ) {
 	
 	<?php
 	
+    if ( $nestedAttributes ){
+        $except = array_merge( array_keys( $nestedAttributes ), $Model->primaryKey() );
+    }
+    else{
+	    $except = null;
+    }
+    
 	$fields = $form->fields( $Model
-		, $Model->attributesEditList()
-		, [ 'print' => false, ]
+		, $Model->attributesEditList( null, $except )
+		, [
+			'print' => false,
+		]
 	);
 	
-	foreach( $nestedAttributes as $name => $value ) {
+	foreach( ( $nestedAttributes ?? [] ) as $name => $value ) {
 		if( isset( $fields[ $name ] ) ) {
 			$fields[ $name ] = $form->field( $Model, $name, [ 'template' => '{input}', 'options' => [ 'tag' => null ] ] )->hiddenInput();
 		}

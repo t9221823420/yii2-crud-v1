@@ -7,10 +7,8 @@
  */
 
 namespace yozh\crud\actions;
-use yozh\crud\traits\actions\EditActionTrait;
 use yozh\base\actions\BaseAction as Action;
 
-class EditAction extends Action
+class DeleteAction extends Action
 {
-	use EditActionTrait;
 }
