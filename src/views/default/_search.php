@@ -11,11 +11,11 @@ use yozh\crud\AssetBundle;
 
 //$searchModel = $searchModel ?? new \backend\modules\prosell\models\prosell\OrderSearch();
 
-$fields = function( $form, $searchModel ) {
+$fields = $fields ?? [];
+
+$fields = function( $form, $searchModel ) use ( $fields ) {
 	
-	$fields = [];
-	
-	if( property_exists ( $searchModel, 'filter_dateFrom' ) || property_exists ( $searchModel,'filter_dateFrom' ) ) {
+	if( property_exists( $searchModel, 'filter_dateFrom' ) || property_exists( $searchModel, 'filter_dateFrom' ) ) {
 		
 		$dateConfig = [
 			'type'          => DatePicker::TYPE_COMPONENT_APPEND,
@@ -33,7 +33,7 @@ $fields = function( $form, $searchModel ) {
 		
 	}
 	
-	if( property_exists ( $searchModel, 'filter_dateFrom' ) ) {
+	if( property_exists( $searchModel, 'filter_dateFrom' ) ) {
 		
 		$fields['filter_dateFrom'] = $form->field( $searchModel, 'filter_dateFrom' )
 		                                  ->label( Yii::t( 'app', 'Date from' ) )
@@ -42,11 +42,11 @@ $fields = function( $form, $searchModel ) {
 		
 	}
 	
-	if( property_exists ( $searchModel, 'filter_dateTo' ) ) {
+	if( property_exists( $searchModel, 'filter_dateTo' ) ) {
 		
 		$fields['filter_dateTo'] = $form->field( $searchModel, 'filter_dateTo' )
-		                                  ->label( Yii::t( 'app', 'Date to' ) )
-		                                  ->widget( DatePicker::class, $dateConfig )
+		                                ->label( Yii::t( 'app', 'Date to' ) )
+		                                ->widget( DatePicker::class, $dateConfig )
 		;
 		
 	}
@@ -58,13 +58,13 @@ AssetBundle::register( $this );
 
 ?>
 
-<?php $form = ActiveForm::begin( [
+<?php $form = $form ?? ActiveForm::begin( [
 	//'id'     => 'search-form',
 	//'action' => Url::to( [ 'search' ] ),
 	'method' => 'get',
 ] ); ?>
 
-<?php if( property_exists ( $searchModel, 'filter_search' ) ): ?>
+<?php if( property_exists( $searchModel, 'filter_search' ) ): ?>
 
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">
@@ -88,9 +88,19 @@ AssetBundle::register( $this );
 <?php endif; ?>
 
 <div class="w-100 valign-bottom-container inline-block-container form-group">
+ 
 	<?php foreach( $fields( $form, $searchModel ) as $field ) : ?>
 		<?= $field; ?>
 	<?php endforeach; ?>
+    
+    <div class="form-group">
+	    <?= Html::submitButton( Yii::t( 'app', 'Filter' ), [ 'class' => 'btn btn-primary' ] ) ?>
+    </div>
+    
+    <div class="form-group">
+	    <?= Html::a( Yii::t( 'app', 'Reset' ), [ 'index' ], [ 'class' => 'btn btn-primary' ] ) ?>
+    </div>
+ 
 </div>
 
 <?php ActiveForm::end(); ?>
