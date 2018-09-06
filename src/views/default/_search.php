@@ -9,8 +9,6 @@ use yozh\crud\AssetBundle;
 /* @var $this yii\web\View */
 /* @var $form yii\widgets\ActiveForm */
 
-//$searchModel = $searchModel ?? new \backend\modules\prosell\models\prosell\OrderSearch();
-
 $fields = $fields ?? [];
 
 $fields = function( $form, $searchModel ) use ( $fields ) {
