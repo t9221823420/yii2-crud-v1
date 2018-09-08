@@ -57,13 +57,12 @@ AssetBundle::register( $this );
 ?>
 
 <?php $form = $form ?? ActiveForm::begin( [
-	//'id'     => 'search-form',
-	//'action' => Url::to( [ 'search' ] ),
-	'method' => 'get',
-] ); ?>
+		//'id'     => 'search-form',
+		//'action' => Url::to( [ 'search' ] ),
+		'method' => 'get',
+	] ); ?>
 
 <?php if( property_exists( $searchModel, 'filter_search' ) ): ?>
-
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">
 
@@ -85,20 +84,24 @@ AssetBundle::register( $this );
 
 <?php endif; ?>
 
-<div class="w-100 valign-bottom-container inline-block-container form-group">
- 
-	<?php foreach( $fields( $form, $searchModel ) as $field ) : ?>
-		<?= $field; ?>
-	<?php endforeach; ?>
-    
-    <div class="form-group">
-	    <?= Html::submitButton( Yii::t( 'app', 'Filter' ), [ 'class' => 'btn btn-primary' ] ) ?>
+<?php if( $fields = $fields( $form, $searchModel ) ): ?>
+
+    <div class="w-100 valign-bottom-container inline-block-container form-group">
+		
+		<?php foreach( $fields as $field ) : ?>
+			<?= $field; ?>
+		<?php endforeach; ?>
+
+        <div class="form-group">
+			<?= Html::submitButton( Yii::t( 'app', 'Filter' ), [ 'class' => 'btn btn-primary' ] ) ?>
+        </div>
+
+        <div class="form-group">
+			<?= Html::a( Yii::t( 'app', 'Reset' ), [ 'index' ], [ 'class' => 'btn btn-primary' ] ) ?>
+        </div>
+
     </div>
-    
-    <div class="form-group">
-	    <?= Html::a( Yii::t( 'app', 'Reset' ), [ 'index' ], [ 'class' => 'btn btn-primary' ] ) ?>
-    </div>
- 
-</div>
+
+<?php endif; ?>
 
 <?php ActiveForm::end(); ?>
