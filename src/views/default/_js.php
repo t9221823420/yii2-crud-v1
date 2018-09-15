@@ -58,8 +58,6 @@ use yii\helpers\Url;
 		},
     };
     
-    console.log(<?= $jsId ?>);
-	
 	$( function () {
 		
 		$( '#<?= $modalId ?>' ).one( yozh.Modal.EVENT_SUBMIT, function ( _response, status, xhr ) {

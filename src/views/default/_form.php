@@ -56,7 +56,7 @@ $fields = function( $form ) use ( $Model, $inputs, $widgets ) {
 	
 	<?php
 	
-    if ( $nestedAttributes ){
+    if ( $nestedAttributes ?? false ){
         $except = array_merge( array_keys( $nestedAttributes ), $Model->primaryKey() );
     }
     else{
