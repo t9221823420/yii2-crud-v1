@@ -15,6 +15,7 @@ use yozh\crud\controllers\DefaultController as CRUDController;
 include __DIR__ . '/_header.php';
 
 $columns = $columns ?? $searchModel->attributesIndexList();
+$nestedRequest = $nestedRequest ?? false;
 
 if( $nestedRequest ) {
 	$nestedAttributes[ CRUDController::PARAM_NESTED ] = 1;
@@ -54,8 +55,8 @@ if( $nestedRequest ) {
 	
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
-		'filterModel'  => $nestedRequest ? null : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface ? $searchModel : null,
-		//'layout'       => "{items}\n{pager}",
+		'filterModel'  => $nestedRequest ?? false ? null : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface ? $searchModel : null,
+		'layout'       => "{items}\n{pager}{limits}",
 		//'showHeader'   => false,
 		'tableOptions' => [
 			'class' => 'table table-striped table-hover',

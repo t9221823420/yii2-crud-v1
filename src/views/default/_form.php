@@ -50,7 +50,7 @@ $fields = function( $form ) use ( $Model, $inputs, $widgets ) {
 
 ?>
 
-<div class="">
+<div class="crud-form">
 	
 	<?php $form = ActiveForm::begin(); ?>
 	
