@@ -2,6 +2,7 @@
 
 namespace yozh\crud\controllers;
 
+use yozh\base\actions\CloneAction;
 use yozh\crud\actions\CreateAction;
 use yozh\crud\actions\EditAction;
 use yozh\crud\actions\IndexAction;
@@ -10,16 +11,13 @@ use yozh\crud\actions\UpdateAction;
 use yozh\crud\interfaces\ActiveRecordInterface;
 use yozh\crud\interfaces\CrudInterface;
 use yozh\crud\traits\CRUDControllerTrait;
-use yozh\crud\models\BaseModel;
+use yozh\crud\models\BaseActiveRecord;
 use yozh\crud\AssetBundle;
 
 use yozh\base\controllers\DefaultController as Controller;
 
 abstract class DefaultController extends Controller implements CrudInterface
 {
-	
-	const PARAM_NESTED = '_nested';
-	
 	use CRUDControllerTrait {
 		CRUDControllerTrait::actions as private _actions;
 	}
@@ -44,11 +42,15 @@ abstract class DefaultController extends Controller implements CrudInterface
 				'class' => CreateAction::class,
 			],
 		
+			'clone' => [
+				'class' => CloneAction::class,
+			],
+		
 		] );
 	}
 	
 	/**
-	 * @return BaseModel::class
+	 * @return BaseActiveRecord::class
 	 */
 	abstract public static function defaultModelClass();
 	

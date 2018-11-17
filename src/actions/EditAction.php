@@ -9,14 +9,14 @@
 namespace yozh\crud\actions;
 
 use Yii;
-use yozh\crud\controllers\DefaultController as CRUDController;
-use yozh\base\models\BaseModel as ActiveRecord;
+use yozh\crud\widgets\NestedModel;
+use yozh\base\models\BaseActiveRecord as ActiveRecord;
 
 class EditAction extends \yozh\base\actions\EditAction
 {
-	public function process( ActiveRecord $Model = null )
+	public function process( ActiveRecord $Model = null, bool $clone = false )
 	{
-		$result = parent::process( $Model );
+		$result = parent::process( $Model, $clone );
 		
 		if( is_array( $result ) ) {
 			

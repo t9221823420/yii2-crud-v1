@@ -12,7 +12,7 @@ use Yii;
 use yii\helpers\Html;
 use yozh\base\interfaces\models\ActiveRecordInterface;
 use yii\db\Query;
-use yozh\crud\controllers\DefaultController as CRUDController;
+use yozh\crud\widgets\NestedModel;
 use yozh\widget\widgets\ActiveButton;
 use yozh\widget\widgets\grid\ActionColumn;
 
@@ -37,9 +37,9 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		*/
 		
 		/**
-		 * @var \yozh\crud\models\BaseModel $Model
+		 * @var \yozh\crud\models\BaseActiveRecord $Model
 		 */
-		if( $nestedRequest = Yii::$app->request->get( CRUDController::PARAM_NESTED )
+		if( $nestedRequest = Yii::$app->request->get( NestedModel::PARAM_NESTED )
 			&& $nestedAttributes = ( Yii::$app->request->queryParams )[ $searchModel->formName() ] ?? []
 		) {
 			$columns = $Model->attributesIndexList( null, array_keys( $nestedAttributes ) );
@@ -83,8 +83,11 @@ class IndexAction extends \yozh\base\actions\IndexAction
 					
 					$attributeReferences[ $attributeName ]['items'] = $refQuery->indexBy( $reference[ $attributeName ] )->column();
 					
+					$label = Yii::t( 'app', preg_replace( '/\sId$/', '', Html::encode( $Model->getAttributeLabel( $attributeName ) ) ) );
+					
 					$columns[ $key ] = [
 						'attribute' => $attributeName,
+						'label'     => $label,
 						'filter'    => $attributeReferences[ $attributeName ]['items'],
 						'value'     => function( $Model, $key, $index, $widget ) use ( $attributeReferences, $attributeName ) {
 							return $attributeReferences[ $attributeName ]['items'][ $Model->$attributeName ] ?? null;
@@ -95,6 +98,34 @@ class IndexAction extends \yozh\base\actions\IndexAction
 				
 			}
 		}
+		
+		$editAction = function( $url, $Model, $action, $icon ) use ( $nestedAttributes, $jsId ) {
+			
+			if( $nestedAttributes ) {
+				$nestedAttributes[ NestedModel::PARAM_NESTED ] = 1;
+			}
+			
+			return ActiveButton::widget( [
+				'label'       => "<span class=\"glyphicon glyphicon-$icon\"></span>",
+				'encodeLabel' => false,
+				'tagName'     => 'a',
+				'action'      => "$jsId.$action",
+				'options'     => [
+					//'class' => 'btn btn-success',
+				],
+				
+				'model'      => $Model,
+				'attributes' => [ 'id', ],
+				'data'       => $nestedAttributes ?? [],
+			
+			] );
+			
+			/*
+			return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, [
+				'title' => Yii::t( 'app', 'Update' ),
+			] );
+			*/
+		};
 		
 		$columns['_actions'] = [
 			'class'          => ActionColumn::class,
@@ -108,33 +139,19 @@ class IndexAction extends \yozh\base\actions\IndexAction
 				. Html::a( Yii::t( 'app', 'Reset' ), [ 'index' ], [ 'class' => 'btn btn-primary' ] )
 			,
 			
-			'template' => '{update}{delete}',
+			'template' => '{update}{clone}{delete}',
 			'buttons'  => [
 				
-				'update' => function( $url, $Model ) use ( $nestedAttributes, $jsId ) {
+				'update' => function( $url, $Model ) use ( $editAction ) {
 					
-					if( $nestedAttributes ) {
-						$nestedAttributes[ CRUDController::PARAM_NESTED ] = 1;
-					}
+					return $editAction( $url, $Model, 'update', 'pencil' );
 					
-					return ActiveButton::widget( [
-						'label'       => '<span class="glyphicon glyphicon-pencil"></span>',
-						'encodeLabel' => false,
-						'tagName'     => 'a',
-						'action'      => "$jsId.update",
-						'options'     => [
-							//'class' => 'btn btn-success',
-						],
-						
-						'model'      => $Model,
-						'attributes' => [ 'id', ],
-						'data'       => $nestedAttributes ?? [],
+				},
+				
+				'clone' => function( $url, $Model ) use ( $editAction ) {
 					
-					] );
+					return $editAction( $url, $Model, 'clone', 'duplicate' );
 					
-					return Html::a( '<span class="glyphicon glyphicon-pencil"></span>', $url, [
-						'title' => Yii::t( 'app', 'Update' ),
-					] );
 				},
 				
 				/*
@@ -163,7 +180,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 			'dataProvider'        => $dataProvider,
 			'nestedRequest'       => $nestedRequest,
 			'nestedAttributes'    => $nestedAttributes,
-			'columns'             => $columns,
+			'columns'             => &$columns,
 			'attributeReferences' => $attributeReferences,
 		];
 		

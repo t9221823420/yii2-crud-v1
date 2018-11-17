@@ -97,7 +97,7 @@ AssetBundle::register( $this );
         </div>
 
         <div class="form-group">
-			<?= Html::a( Yii::t( 'app', 'Reset' ), [ 'index' ], [ 'class' => 'btn btn-primary' ] ) ?>
+	        <?= Html::a( Yii::t( 'app', 'Reset' ), [ '/' . trim(Yii::$app->controller->route, '/') ], [ 'class' => 'btn btn-primary' ] ) ?>
         </div>
 
     </div>

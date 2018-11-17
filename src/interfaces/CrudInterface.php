@@ -11,7 +11,7 @@ namespace yozh\crud\interfaces;
 interface CrudInterface
 {
 	/**
-	 * @return BaseModel::class
+	 * @return BaseActiveRecord::class
 	 */
 	public static function defaultModelClass();
 	

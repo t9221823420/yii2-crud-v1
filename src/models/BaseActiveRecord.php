@@ -2,9 +2,9 @@
 
 namespace yozh\crud\models;
 
-use yozh\form\models\BaseModel as ActiveRecord;
+use yozh\form\models\BaseActiveRecord as ActiveRecord;
 
-abstract class BaseModel extends ActiveRecord
+abstract class BaseActiveRecord extends ActiveRecord
 {
 	/*
 	public function attributesDefaultList( ?array $only = null, ?array $except = null, ?bool $schemaOnly = false )

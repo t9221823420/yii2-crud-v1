@@ -41,21 +41,28 @@ use yii\helpers\Url;
 			
 		},
 		
-		create : function ( _$target ) {
+		action : function ( _$target, _url ) {
 			
+    		_$target.data() ? _url = _url + '?' : '';
+    		
 			$( '#<?= $modalId ?>' ).yozhModal( {
-				url : '<?= Url::to( [ 'create?' ] ) ?>' + $.param( _$target.data() )
+				url : _url + $.param( _$target.data() )
 			} ).show();
 			
 		},
 		
-		update : function ( _$target ) {
-			
-			$( '#<?= $modalId ?>' ).yozhModal( {
-				url : '<?= Url::to( [ 'update?' ] ) ?>' + $.param( _$target.data() ),
-			} ).show();
-			
+		create : function ( _$target ) {
+    		this.action( _$target, '<?= Url::to( [ 'create' ] ) ?>' );
 		},
+		
+		update : function ( _$target ) {
+    		this.action( _$target, '<?= Url::to( [ 'update' ] ) ?>' );
+		},
+		
+		clone : function ( _$target ) {
+    		this.action( _$target, '<?= Url::to( [ 'clone' ] ) ?>' );
+		},
+		
     };
     
 	$( function () {
