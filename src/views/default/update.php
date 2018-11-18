@@ -1,3 +1,3 @@
 <?php
 
-include( '/edit.php' );
+include( 'edit.php' );

@@ -6,7 +6,7 @@ use yozh\widget\widgets\grid\GridView;
 use yii\widgets\Pjax;
 use yozh\widget\widgets\Modal;
 use yozh\widget\widgets\ActiveButton;
-use yozh\crud\controllers\DefaultController as CRUDController;
+use yozh\crud\widgets\NestedModel;
 
 /**
  * @var $this \yii\web\View
@@ -15,10 +15,9 @@ use yozh\crud\controllers\DefaultController as CRUDController;
 include __DIR__ . '/_header.php';
 
 $columns = $columns ?? $searchModel->attributesIndexList();
-$nestedRequest = $nestedRequest ?? false;
 
-if( $nestedRequest ) {
-	$nestedAttributes[ CRUDController::PARAM_NESTED ] = 1;
+if( $nestedRequest ?? false ) {
+	$nestedAttributes[ NestedModel::PARAM_NESTED ] = 1;
 }
 
 ?>
@@ -56,11 +55,7 @@ if( $nestedRequest ) {
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $nestedRequest ?? false ? null : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface ? $searchModel : null,
-<<<<<<< HEAD
-		//'layout'       => "{items}\n{pager}",
-=======
 		'layout'       => "{items}\n{pager}{limits}",
->>>>>>> remotes/origin/temp
 		//'showHeader'   => false,
 		'tableOptions' => [
 			'class' => 'table table-striped table-hover',
@@ -80,4 +75,3 @@ if( $nestedRequest ) {
 	<?php Pjax::end(); ?>
 
 </div>
-

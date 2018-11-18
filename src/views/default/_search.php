@@ -12,46 +12,46 @@ use yozh\crud\AssetBundle;
 $fields = $fields ?? [];
 
 $fields = function ($form, $searchModel) use ($fields) {
-
-    if ($fields instanceof Closure) {
-        $fields = $fields($form, $searchModel);
-    }
-
-    if (property_exists($searchModel, 'filter_dateFrom') || property_exists($searchModel, 'filter_dateFrom')) {
-
-        $dateConfig = [
-            'type' => DatePicker::TYPE_COMPONENT_APPEND,
-            'options' => [
-                'class' => 'form-control',
-                'placeholder' => Yii::t('app', 'Select date'),
-            ],
-            'pluginOptions' => [
-                'format' => 'd.mm.yyyy',
-                'todayHighlight' => true,
-                'todayBtn' => true,
-                'autoclose' => true,
-            ],
-        ];
-
-        if (property_exists($searchModel, 'filter_dateFrom') && !array_key_exists('filter_dateFrom', $fields)) {
-
-            $fields['filter_dateFrom'] = $form->field($searchModel, 'filter_dateFrom')
-                ->label(Yii::t('app', 'Date from'))
-                ->widget(DatePicker::class, $dateConfig);
-
-        }
-
-        if (property_exists($searchModel, 'filter_dateTo') && !array_key_exists('filter_dateTo', $fields)) {
-
-            $fields['filter_dateTo'] = $form->field($searchModel, 'filter_dateTo')
-                ->label(Yii::t('app', 'Date to'))
-                ->widget(DatePicker::class, $dateConfig);
-
-        }
-    }
-
-
-    return $fields;
+	
+	if ($fields instanceof Closure) {
+		$fields = $fields($form, $searchModel);
+	}
+	
+	if (property_exists($searchModel, 'filter_dateFrom') || property_exists($searchModel, 'filter_dateFrom')) {
+		
+		$dateConfig = [
+			'type' => DatePicker::TYPE_COMPONENT_APPEND,
+			'options' => [
+				'class' => 'form-control',
+				'placeholder' => Yii::t('app', 'Select date'),
+			],
+			'pluginOptions' => [
+				'format' => 'd.mm.yyyy',
+				'todayHighlight' => true,
+				'todayBtn' => true,
+				'autoclose' => true,
+			],
+		];
+		
+		if (property_exists($searchModel, 'filter_dateFrom') && !array_key_exists('filter_dateFrom', $fields)) {
+			
+			$fields['filter_dateFrom'] = $form->field($searchModel, 'filter_dateFrom')
+			                                  ->label(Yii::t('app', 'Date from'))
+			                                  ->widget(DatePicker::class, $dateConfig);
+			
+		}
+		
+		if (property_exists($searchModel, 'filter_dateTo') && !array_key_exists('filter_dateTo', $fields)) {
+			
+			$fields['filter_dateTo'] = $form->field($searchModel, 'filter_dateTo')
+			                                ->label(Yii::t('app', 'Date to'))
+			                                ->widget(DatePicker::class, $dateConfig);
+			
+		}
+	}
+	
+	
+	return $fields;
 };
 
 AssetBundle::register($this);
@@ -59,25 +59,25 @@ AssetBundle::register($this);
 ?>
 
 <?php $form = $form ?? ActiveForm::begin([
-        //'id'     => 'search-form',
-        //'action' => Url::to( [ 'search' ] ),
-        'method' => 'get',
-    ]); ?>
+		//'id'     => 'search-form',
+		//'action' => Url::to( [ 'search' ] ),
+		'method' => 'get',
+	]); ?>
 
 <?php if (property_exists($searchModel, 'filter_search')): ?>
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">
 
         <div class="common-search">
-
-            <?= $form->field($searchModel, 'filter_search', [
-                'options' => [
-                    'class' => 'w-50 form-item',
-                    'prompt' => Yii::t('app', 'Name'),
-                ],
-            ])->label(false) ?>
-
-            <?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-success form-control']) ?>
+			
+			<?= $form->field($searchModel, 'filter_search', [
+				'options' => [
+					'class' => 'w-50 form-item',
+					'prompt' => Yii::t('app', 'Name'),
+				],
+			])->label(false) ?>
+			
+			<?= Html::submitButton(Yii::t('app', 'Search'), ['class' => 'btn btn-success form-control']) ?>
 
         </div>
 
@@ -89,21 +89,17 @@ AssetBundle::register($this);
 <?php if ($fields = $fields($form, $searchModel)): ?>
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">
-
-        <?php foreach ($fields as $field) : ?>
-            <?= $field; ?>
-        <?php endforeach; ?>
+		
+		<?php foreach ($fields as $field) : ?>
+			<?= $field; ?>
+		<?php endforeach; ?>
 
         <div class="form-group">
-            <?= Html::submitButton(Yii::t('app', 'Filter'), ['class' => 'btn btn-primary']) ?>
+			<?= Html::submitButton(Yii::t('app', 'Filter'), ['class' => 'btn btn-primary']) ?>
         </div>
 
         <div class="form-group">
-<<<<<<< HEAD
-	        <?= Html::a( Yii::t( 'app', 'Reset' ), [ '/' . trim(Yii::$app->controller->route, '/') ], [ 'class' => 'btn btn-primary' ] ) ?>
-=======
-            <?= Html::a(Yii::t('app', 'Reset'), ['/' . trim(Yii::$app->controller->route, '/')], ['class' => 'btn btn-primary']) ?>
->>>>>>> remotes/origin/temp
+			<?= Html::a(Yii::t('app', 'Reset'), ['/' . trim(Yii::$app->controller->route, '/')], ['class' => 'btn btn-primary']) ?>
         </div>
 
     </div>

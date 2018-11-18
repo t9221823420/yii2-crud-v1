@@ -11,10 +11,9 @@
       "homepage": "https://github.com/t9221823420"
     }
   ],
-  "minimum-stability": "stable",
   "require": {
-    "kartik-v/yii2-helpers": "@dev",
-    "kartik-v/yii2-icons": "@dev",
+    "kartik-v/yii2-helpers": "~1.0",
+    "kartik-v/yii2-icons": "~1.0",
     "kartik-v/yii2-detail-view": "@dev",
     "kartik-v/yii2-grid": "@dev",
     "kartik-v/yii2-markdown": "@dev",
