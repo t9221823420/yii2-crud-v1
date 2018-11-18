@@ -56,7 +56,11 @@ if( $nestedRequest ) {
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
 		'filterModel'  => $nestedRequest ?? false ? null : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface ? $searchModel : null,
+<<<<<<< HEAD
 		//'layout'       => "{items}\n{pager}",
+=======
+		'layout'       => "{items}\n{pager}{limits}",
+>>>>>>> remotes/origin/temp
 		//'showHeader'   => false,
 		'tableOptions' => [
 			'class' => 'table table-striped table-hover',

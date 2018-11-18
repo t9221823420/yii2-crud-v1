@@ -51,6 +51,7 @@ $fields = function( $form ) use ( $Model, $inputs, $widgets ) {
 
 $_renderInPlace_ = $_renderInPlace_ ?? true;
 
+<<<<<<< HEAD
 $this->blocks['crud.form.wrapper'] = "<div class=\"crud-form\">{crud.form}</div>";
 
 $this->beginBlock( 'crud.form', false );
@@ -95,6 +96,9 @@ foreach( ( $nestedAttributes ?? [] ) as $_name => $_value ) {
 }
 
 foreach( $fields as $_fieldName => $_fieldOutput ) {
+=======
+<div class="crud-form">
+>>>>>>> remotes/origin/temp
 	
 	$this->blocks['crud.form.fields'][ '{' . $_fieldName . '}' ] = $_fieldOutput;
 	
