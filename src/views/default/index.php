@@ -44,10 +44,15 @@ if( $nestedRequest ?? false ) {
 			'header'       => Yii::t( 'app', 'Add new' ),
 			'footer'       => false,
 			'toggleButton' => ActiveButton::widget( [
-				'type'   => ActiveButton::TYPE_YES,
-				'label'  => Yii::t( 'app', 'Add' ),
-				'action' => $jsId . '.create',
-				'data'   => $nestedAttributes ?? [],
+				'tagName' => 'a',
+				'url'     => Url::to( [ 'create' ] ),
+				'type'    => ActiveButton::TYPE_YES,
+				'label'   => Yii::t( 'app', 'Add' ),
+				'action'  => $jsId . '.create',
+				'data'    => $nestedAttributes ?? [],
+                'options' => [
+	                'data-pjax' => 0,
+                ],
 			] ),
 		] ); ?>
     </p>
