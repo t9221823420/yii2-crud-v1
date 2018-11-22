@@ -2,7 +2,7 @@
 
 use yii\helpers\Html;
 use yii\helpers\Url;
-use yozh\form\ActiveForm;
+use yozh\crud\widgets\ActiveForm;
 use yozh\form\ActiveField;
 use yozh\base\components\helpers\ArrayHelper;
 
@@ -31,8 +31,8 @@ $fields = function( $form ) use ( $Model, $inputs, $widgets ) {
 		
 		'type' => $form->field( $Model, 'type' )->dropDownList( $inputs, [
 			'class'           => 'form-control yozh-widget yozh-widget-nested-select',
-			'url'             => Url::to( [ 'get-widgets-list' ] ),
-			'nested-selector' => '#' . Html::getInputId( $Model, 'widget' ),
+			'data-url'             => Url::to( [ 'get-widgets-list' ] ),
+			'data-selector' => '#' . Html::getInputId( $Model, 'widget' ),
 			'prompt'          => Yii::t( 'app', 'Select' ),
 		] ),
 		
@@ -74,34 +74,13 @@ if( preg_match( '/(?<beginForm>\<form.*?\>).*?(?<csrf>\<input.*?\>).*?(?<endForm
 
 $this->blocks['crud.form.body']    = ( $this->blocks['crud.form.csrf'] ?? false ? "{crud.form.csrf}\n" : '' ) . "{crud.form.fields}\n{crud.form.controls}";
 
-if( $nestedAttributes ?? false ) {
-	$_except = array_unique( array_merge( array_keys( $nestedAttributes ), $Model->primaryKey() ));
-}
-else {
-	$_except = null;
-}
-
-if( isset( $fields ) && $fields instanceof Closure ) {
-	$fields = $fields( $form );
-}
-
-$fields = ArrayHelper::merge( $form->fields( $Model
-	, $Model->attributesEditList( null, $_except )
-	, [
-		'print' => false,
-	]
-), $fields ?? [] );
-
-foreach( ( $nestedAttributes ?? [] ) as $_name => $_value ) {
-	if( isset( $fields[ $_name ] ) ) {
-		$fields[ $_name ] = $form->field( $Model, $_name, [ 'template' => '{input}', 'options' => [ 'tag' => null ] ] )->hiddenInput();
-	}
-}
+$fields = $form->fields( $Model, $attributes ?? null, [
+	'nestedAttributes' => $nestedAttributes,
+	'fields' => $fields ?? [],
+] );
 
 foreach( $fields as $_fieldName => $_fieldOutput ) {
-	
 	$this->blocks['crud.form.fields'][ '{' . $_fieldName . '}' ] = $_fieldOutput;
-	
 }
 
 $this->blocks['crud.form.controls'] = '<div class="form-group">' . Html::submitButton( Yii::t( 'app', 'Save' ), [ 'class' => 'btn btn-success' ] ) . '</div>';
@@ -128,6 +107,7 @@ if( $_renderInPlace_ ) {
 	
 }
 
+// garbage
 unset( $_except );
 unset( $_name );
 unset( $_fieldName );
