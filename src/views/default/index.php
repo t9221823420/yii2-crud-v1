@@ -59,7 +59,11 @@ if( $nestedRequest ?? false ) {
 	
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
-		'filterModel'  => $nestedRequest ?? false ? null : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface ? $searchModel : null,
+		'filterModel'  => $nestedRequest ?? false
+                ? null
+                : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface
+                    ? $searchModel
+                    : null,
 		'layout'       => "{items}\n{pager}{limits}",
 		//'showHeader'   => false,
 		'tableOptions' => [

@@ -11,13 +11,13 @@ use yozh\crud\AssetBundle;
 
 $fields = $fields ?? [];
 
-$fields = function ($form, $searchModel) use ($fields) {
+$fields = function( $form, $Model, $attributes = [], $params = [] ) use ( $fields ) {
 	
 	if ($fields instanceof Closure) {
-		$fields = $fields($form, $searchModel);
+		$fields = $fields($form, $Model);
 	}
 	
-	if (property_exists($searchModel, 'filter_dateFrom') || property_exists($searchModel, 'filter_dateFrom')) {
+	if (property_exists($Model, 'filter_dateFrom') || property_exists($Model, 'filter_dateFrom')) {
 		
 		$dateConfig = [
 			'type' => DatePicker::TYPE_COMPONENT_APPEND,
@@ -33,17 +33,17 @@ $fields = function ($form, $searchModel) use ($fields) {
 			],
 		];
 		
-		if (property_exists($searchModel, 'filter_dateFrom') && !array_key_exists('filter_dateFrom', $fields)) {
+		if (property_exists($Model, 'filter_dateFrom') && !array_key_exists('filter_dateFrom', $fields)) {
 			
-			$fields['filter_dateFrom'] = $form->field($searchModel, 'filter_dateFrom')
+			$fields['filter_dateFrom'] = $form->field($Model, 'filter_dateFrom')
 			                                  ->label(Yii::t('app', 'Date from'))
 			                                  ->widget(DatePicker::class, $dateConfig);
 			
 		}
 		
-		if (property_exists($searchModel, 'filter_dateTo') && !array_key_exists('filter_dateTo', $fields)) {
+		if (property_exists($Model, 'filter_dateTo') && !array_key_exists('filter_dateTo', $fields)) {
 			
-			$fields['filter_dateTo'] = $form->field($searchModel, 'filter_dateTo')
+			$fields['filter_dateTo'] = $form->field($Model, 'filter_dateTo')
 			                                ->label(Yii::t('app', 'Date to'))
 			                                ->widget(DatePicker::class, $dateConfig);
 			

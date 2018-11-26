@@ -28,7 +28,7 @@ class ActiveForm extends \yozh\form\ActiveForm
 		extract( ArrayHelper::setDefaults( $params, static::$defaultFieldParams, ArrayHelper::DEFAULTS_MODE_FILTER ) );
 		
 		if( isset( $fields ) && $fields instanceof \Closure ) {
-			$fields = $fields( $form );
+			$fields = $fields( $this, $Model, $attributes, $params );
 		}
 		
 		// convert $nestedAttributes to hidden if set

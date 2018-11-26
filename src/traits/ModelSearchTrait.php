@@ -11,34 +11,25 @@ namespace yozh\crud\traits;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
-use yozh\form\interfaces\AttributesFilterInterface;
+use yozh\form\interfaces\DefaultFiltersInterface;
 
 trait ModelSearchTrait
 {
+	use \yozh\form\traits\ModelSearchTrait;
+	
+	public $filter_search;
+	
 	public function rules()
 	{
-		$rules = [];
+		$rules = [
+			'filter_search' => [ [ 'filter_search', ], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process' ],
+		];
 		
-		if( $this instanceof AttributesFilterInterface ) {
+		if( $this instanceof DefaultFiltersInterface ) {
 			$rules = array_merge( $rules, parent::rules() );
 		}
 		
 		return $rules;
-	}
-	
-	public function scenarios()
-	{
-		$scenarios = Model::scenarios();
-		
-		if( $this instanceof AttributesFilterInterface ) {
-			
-			$scenarios[ static::SCENARIO_FILTER ] = $this->attributesFilter();
-			
-			$this->scenario = static::SCENARIO_FILTER;
-		}
-		
-		// bypass scenarios() implementation in the parent class
-		return $scenarios;
 	}
 	
 	/**
@@ -61,19 +52,16 @@ trait ModelSearchTrait
 			return $dataProvider;
 		}
 		
-		if( $this instanceof AttributesFilterInterface ) {
-			$this->_addDefaultFilters( $query );
+		if( $this instanceof DefaultFiltersInterface ) {
+			$this->_addDefaultFiltersConditions( $query );
 		}
+		
+			$query->andFilterWhere( [ 'or',
+				$this->attributes( [ 'title' ] ) ? [ 'like', 'title', $this->filter_search ] : null,
+				$this->attributes( [ 'name' ] ) ? [ 'like', 'name', $this->filter_search ] : null,
+			] );
 		
 		return $dataProvider;
 	}
 	
-	public function attributesFilter( ?array $only = null, ?array $except = null, ?bool $schemaOnly = false )
-	{
-		return parent::attributesDefaultList(
-			$this->attributesIndexList()
-			, $except
-			, $schemaOnly
-		);
-	}
 }
