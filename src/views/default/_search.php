@@ -50,7 +50,6 @@ $fields = function( $form, $Model, $attributes = [], $params = [] ) use ( $field
 		}
 	}
 	
-	
 	return $fields;
 };
 

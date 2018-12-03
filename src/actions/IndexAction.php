@@ -50,12 +50,16 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		
 		$attributeReferences = [];
 		if( $Model instanceof ActiveRecordInterface ) {
+			
 			foreach( $Model->getShemaReferences() as $refName => $reference ) {
 				foreach( $reference as $fk => $pk ) {
 					$attributeReferences[ $fk ][ $refName ] = $reference;
 				}
 			}
+			
 		}
+		
+		$shemaColumns = $Model->getShemaColumns();
 		
 		foreach( $columns as $key => $attributeName ) {
 			
@@ -95,6 +99,18 @@ class IndexAction extends \yozh\base\actions\IndexAction
 					];
 					
 				}
+				
+			}
+			
+			elseif( in_array($shemaColumns[$attributeName]->dbType, ['set', 'enum'])  ){
+				
+				$values = $shemaColumns[$attributeName]->enumValues ?? [];
+				
+				$columns[ $key ] = [
+					'attribute' => $attributeName,
+					'label'     => $Model->getAttributeLabel( $attributeName ),
+					'filter'    => array_combine($values, $values),
+				];
 				
 			}
 		}
