@@ -26,9 +26,8 @@ if( preg_match( '/(?<beginForm>\<form.*?\>).*?(?<csrf>\<input.*?\>).*?(?<endForm
 $this->blocks['crud.form.body']    = $this->blocks['crud.form.body'] ?? ( $this->blocks['crud.form.csrf'] ?? false ? "{crud.form.csrf}\n" : '' ) . "{crud.form.fields}\n{crud.form.controls}";
 
 $fields = $form->fields( $Model, $attributes ?? null, [
-	'nestedAttributes' => $nestedAttributes ?? [],
-	'form' => $form,
 	'fields' => $fields ?? [],
+	'nestedAttributes' => $nestedAttributes ?? [],
 ] );
 
 foreach( $fields as $_fieldName => $_fieldOutput ) {
@@ -39,7 +38,27 @@ $this->blocks['crud.form.controls'] = $this->blocks['crud.form.controls'] ?? '<d
 
 if( $_renderInPlace_ ?? true ) {
 	
-	$this->blocks['crud.form.fields'] = implode( "\n", $this->blocks['crud.form.fields'] );
+	$render = function( $self, $fields ){
+		
+		$output = '';
+		
+		foreach( $fields as $field ) {
+			
+			if( is_string( $field ) || is_numeric( $field ) || $field instanceof \yii\widgets\ActiveField ) {
+				$output .= $field;
+			}
+			
+			else if( is_array( $field ) ) {
+				
+				$output .= $self( $self, $field);
+				
+			}
+		}
+		
+		return $output;
+	};
+	
+	$this->blocks['crud.form.fields'] = $render( $render, $this->blocks['crud.form.fields'] );
 	
 	$this->blocks['crud.form.body'] = strtr( $this->blocks['crud.form.body'], [
 		'{crud.form.csrf}'     => $this->blocks['crud.form.csrf'] ?? '',

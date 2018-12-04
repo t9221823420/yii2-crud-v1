@@ -21,6 +21,11 @@ class NestedModel extends Widget
 	const PARAM_NESTED = '_nested';
 	
 	/**
+	 * @var string $title.
+	 */
+	public $title;
+	
+	/**
 	 * @var ActiveRecord $model for server ation.
 	 */
 	public $model;
@@ -57,7 +62,7 @@ class NestedModel extends Widget
 		
 		Html::addCssClass( $options, [ 'yozh-widget-nested-models' ] );
 		
-		$title = Yii::t( 'app', Inflector::pluralize( Inflector::camel2words( $Model->formName() ) ) );
+		$title = $this->title ?? Yii::t( 'app', Inflector::pluralize( Inflector::camel2words( $Model->formName() ) ) );
 		$id    = Inflector::camel2id( $Model->formName() );
 		
 		$this->params = ArrayHelper::merge( [ $Model->formName() => $Model->getAttributes() ], $this->params );
@@ -75,7 +80,7 @@ class NestedModel extends Widget
 			}
 			
 		}
-		else if( is_string() ) {
+		else if( !is_string($this->url) ) {
 			throw new \yii\base\InvalidParamException( "\$url have to be an array or a string." );
 		}
 		

@@ -8,29 +8,17 @@
 
 namespace yozh\crud\traits;
 
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveQuery;
+use yozh\base\components\validators\Validator;
+use yozh\base\interfaces\models\ActiveRecordInterface;
 use yozh\form\interfaces\DefaultFiltersInterface;
 
 trait ModelSearchTrait
 {
 	use \yozh\form\traits\ModelSearchTrait;
-	
-	public $filter_search;
-	
-	public function rules()
-	{
-		$rules = [
-			'filter_search' => [ [ 'filter_search', ], 'filter', 'filter' => '\yii\helpers\HtmlPurifier::process' ],
-		];
-		
-		if( $this instanceof DefaultFiltersInterface ) {
-			$rules = array_merge( $rules, parent::rules() );
-		}
-		
-		return $rules;
-	}
 	
 	/**
 	 * @param array $params
@@ -49,6 +37,11 @@ trait ModelSearchTrait
 		] );
 		
 		if( !( $this->load( $params ) && $this->validate() ) ) {
+			
+			if( Yii::$app->request->isNested ){
+				$dataProvider->query->where('1=0');
+			}
+			
 			return $dataProvider;
 		}
 		

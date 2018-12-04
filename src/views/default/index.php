@@ -16,7 +16,7 @@ include __DIR__ . '/_header.php';
 
 $columns = $columns ?? $searchModel->attributesIndexList();
 
-if( $nestedRequest ?? false ) {
+if( Yii::$app->request->isNested ) {
 	$nestedAttributes[ NestedModel::PARAM_NESTED ] = 1;
 }
 
@@ -59,13 +59,13 @@ if( $nestedRequest ?? false ) {
 	
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
-		'filterModel'  => $nestedRequest ?? false
+		'filterModel'  => Yii::$app->request->isNested
                 ? null
                 : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface
                     ? $searchModel
                     : null,
 		'layout'       => "{items}\n{pager}{limits}",
-		//'showHeader'   => false,
+		'showHeader'   => $dataProvider->getCount() > 0,
 		'tableOptions' => [
 			'class' => 'table table-striped table-hover',
 		],

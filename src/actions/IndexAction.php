@@ -10,6 +10,7 @@ namespace yozh\crud\actions;
 
 use Yii;
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yozh\base\interfaces\models\ActiveRecordInterface;
 use yii\db\Query;
 use yozh\crud\widgets\NestedModel;
@@ -20,7 +21,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 {
 	public function process()
 	{
-		$nestedRequest = $nestedAttributes = null;
+		$nestedAttributes = null;
 		
 		$jsId = $this->controller->jsId;
 		
@@ -39,7 +40,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		/**
 		 * @var \yozh\crud\models\BaseActiveRecord $Model
 		 */
-		if( $nestedRequest = Yii::$app->request->get( NestedModel::PARAM_NESTED )
+		if( Yii::$app->request->isNested
 			&& $nestedAttributes = ( Yii::$app->request->queryParams )[ $searchModel->formName() ] ?? []
 		) {
 			$columns = $Model->attributesIndexList( null, array_keys( $nestedAttributes ) );
@@ -102,14 +103,14 @@ class IndexAction extends \yozh\base\actions\IndexAction
 				
 			}
 			
-			elseif( in_array($shemaColumns[$attributeName]->dbType, ['set', 'enum'])  ){
+			else if( in_array( $shemaColumns[ $attributeName ]->dbType, [ 'set', 'enum' ] ) ) {
 				
-				$values = $shemaColumns[$attributeName]->enumValues ?? [];
+				$values = $shemaColumns[ $attributeName ]->enumValues ?? [];
 				
 				$columns[ $key ] = [
 					'attribute' => $attributeName,
 					'label'     => $Model->getAttributeLabel( $attributeName ),
-					'filter'    => array_combine($values, $values),
+					'filter'    => array_combine( $values, $values ),
 				];
 				
 			}
@@ -126,6 +127,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 				'encodeLabel' => false,
 				'tagName'     => 'a',
 				'action'      => "$jsId.$action",
+				'url'         => Url::to( [ $action ] + $Model->getPrimaryKey(true) ),
 				'options'     => [
 					//'class' => 'btn btn-success',
 				],
@@ -194,7 +196,6 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		return [
 			'searchModel'         => $searchModel,
 			'dataProvider'        => $dataProvider,
-			'nestedRequest'       => $nestedRequest,
 			'nestedAttributes'    => $nestedAttributes,
 			'columns'             => &$columns,
 			'attributeReferences' => $attributeReferences,
