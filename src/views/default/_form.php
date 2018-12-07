@@ -10,7 +10,7 @@ $this->blocks['crud.form.wrapper'] = "<div class=\"crud-form\">{crud.form}</div>
 
 $this->beginBlock( 'crud.form', false );
 
-$form = ActiveForm::begin();
+$form = ActiveForm::begin( $formConfig ?? [] );
 
 print "{crud.form.body}";
 

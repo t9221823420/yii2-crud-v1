@@ -36,10 +36,11 @@ trait ModelSearchTrait
 			//'sort'  => [ 'defaultOrder' => [ 'id' => SORT_DESC ] ],
 		] );
 		
-		if( !( $this->load( $params ) && $this->validate() ) ) {
+		// empty($this->getDirtyAttributes()) if loads but nothing changes. it successfuly pass througth validation
+		if( !( $this->load( $params ) && !empty( $this->getDirtyAttributes() ) && $this->validate() ) ) {
 			
-			if( Yii::$app->request->isNested ){
-				$dataProvider->query->where('1=0');
+			if( Yii::$app->request->isNested ) {
+				$dataProvider->query->where( '1=0' );
 			}
 			
 			return $dataProvider;
@@ -49,10 +50,10 @@ trait ModelSearchTrait
 			$this->_addDefaultFiltersConditions( $query );
 		}
 		
-			$query->andFilterWhere( [ 'or',
-				$this->attributes( [ 'title' ] ) ? [ 'like', 'title', $this->filter_search ] : null,
-				$this->attributes( [ 'name' ] ) ? [ 'like', 'name', $this->filter_search ] : null,
-			] );
+		$query->andFilterWhere( [ 'or',
+			$this->attributes( [ 'title' ] ) ? [ 'like', 'title', $this->filter_search ] : null,
+			$this->attributes( [ 'name' ] ) ? [ 'like', 'name', $this->filter_search ] : null,
+		] );
 		
 		return $dataProvider;
 	}

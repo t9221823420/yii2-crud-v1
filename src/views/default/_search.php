@@ -3,6 +3,8 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yozh\form\ActiveForm;
+use yii\base\Model;
+use yozh\form\ActiveField;
 use kartik\date\DatePicker;
 use yozh\crud\AssetBundle;
 
@@ -11,7 +13,7 @@ use yozh\crud\AssetBundle;
 
 $fields = $fields ?? [];
 
-$fields = function( $form, $Model, $attributes = [], $params = [] ) use ( $fields ) {
+$fields = function( ActiveForm $form, Model $Model, ?array $attributes = [], ?array $params = [] ) use ( $fields ) {
 	
 	if ($fields instanceof Closure) {
 		$fields = $fields($form, $Model);

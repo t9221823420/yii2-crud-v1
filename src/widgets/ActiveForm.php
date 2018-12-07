@@ -19,19 +19,20 @@ class ActiveForm extends \yozh\form\ActiveForm
 	public function fields( Model $Model, $attributes = null, $params = [] )
 	{
 		static::$defaultFieldParams['nestedAttributes'] = [];
-		static::$defaultFieldParams['print'] = false;
+		static::$defaultFieldParams['print']            = false;
 		
 		/**
 		 * @var Array|Closure $fields
 		 */
 		extract( ArrayHelper::setDefaults( $params, static::$defaultFieldParams, ArrayHelper::DEFAULTS_MODE_FILTER ) );
 		
-		if( isset( $fields ) && $fields instanceof \Closure ) {
+		if( $fields instanceof \Closure ) {
 			
 			$fields = $fields( $this, $Model, $attributes, $params );
-			$params['fields'] = &$fields;
 			
 		}
+		
+		$params['fields'] = &$fields;
 		
 		// convert $nestedAttributes to hidden if set
 		if( $nestedAttributes ?? false ) {
@@ -39,17 +40,9 @@ class ActiveForm extends \yozh\form\ActiveForm
 			//$_except = array_unique( array_merge( array_keys( $nestedAttributes ), $Model->primaryKey() ) );
 			
 			foreach( ( $nestedAttributes ?? [] ) as $_name => $_value ) {
-				if( isset( $fields[ $_name ] ) ) {
+				if( in_array( $_name, $Model->attributes() ) ) {
 					$fields[ $_name ] = $this->field( $Model, $_name, [ 'template' => '{input}', 'options' => [ 'tag' => null ] ] )->hiddenInput();
 				}
-			}
-		}
-		
-		// remove attributes wich set to false
-		foreach( $fields as $_fieldName => $_fieldValue ) {
-			if( $_fieldValue === false ) {
-				//$_except[] = $_fieldName;
-				unset( $fields[ $_fieldName ] );
 			}
 		}
 		

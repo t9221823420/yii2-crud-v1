@@ -22,10 +22,12 @@ if( 0 && isset($searchModel) && Yii::$app->request->get( $searchModel->formName(
 	$this->title = Yii::t( 'app', 'Search result') . ": $modelTitle";
 }
 else{
-	$this->title = "$actionTitle: $modelTitle";
+	$this->title = $this->title ?? "$actionTitle: $modelTitle";
 }
 
-$this->params['breadcrumbs'][] = [ 'label' => $modelTitle, 'url' => [ 'index' ] ];
-//$this->params['breadcrumbs'][] = $actionTitle;
+//костыль
+if( !($this->params['breadcrumbs'] ?? false && (end($this->params['breadcrumbs'])['label'] ?? '') == $modelTitle)){
+	$this->params['breadcrumbs'][] = [ 'label' => $modelTitle, 'url' => [ 'index' ] ];
+}
 
 $jsId = $jsId ?? $this->context->jsId;
