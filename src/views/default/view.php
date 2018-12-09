@@ -1,11 +1,26 @@
 <?php
 
 use yii\helpers\Html;
-use yii\widgets\DetailView;
+use yozh\widget\widgets\DetailView;
 
 include __DIR__ . '/_header.php';
 
 /* @var $this yii\web\View */
+
+if( $Model instanceof \yozh\base\interfaces\models\ActiveRecordInterface ) {
+	
+	foreach( $Model->shemaReferences() as $refName => $reference ) {
+		
+		foreach( $reference as $fk => $pk ) {
+			$attributeReferences[ $fk ][ $refName ] = $reference;
+		}
+		
+	}
+	
+	$fk = $pk = null;
+}
+
+$trap = 1;
 
 ?>
 <div class="<?= "$modelId-$actionId" ?>">
@@ -27,3 +42,5 @@ include __DIR__ . '/_header.php';
 		'model'      => $Model,
 		'attributes' => array_keys( $Model->attributes ),
 	] ) ?>
+ 
+</div>

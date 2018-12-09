@@ -52,7 +52,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		$attributeReferences = [];
 		if( $Model instanceof ActiveRecordInterface ) {
 			
-			foreach( $Model->getShemaReferences() as $refName => $reference ) {
+			foreach( $Model->shemaReferences() as $refName => $reference ) {
 				foreach( $reference as $fk => $pk ) {
 					$attributeReferences[ $fk ][ $refName ] = $reference;
 				}
@@ -60,7 +60,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 			
 		}
 		
-		$shemaColumns = $Model->getShemaColumns();
+		$shemaColumns = $Model->shemaColumns();
 		
 		foreach( $columns as $key => $attributeName ) {
 			
