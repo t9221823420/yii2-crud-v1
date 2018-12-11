@@ -3,9 +3,15 @@
 use yii\helpers\Html;
 use yii\helpers\Inflector;
 
-if( !isset( $Model ) && isset( $searchModel ) ) {
-	$Model = $searchModel;
+if( !isset( $Model ) && isset( $ModelSearch ) ) {
+	$Model = $ModelSearch;
 }
+// $ModelSearch need to render _search.php
+/*
+elseif( !isset( $ModelSearch ) && isset( $Model ) ){
+	$ModelSearch = $Model;
+}
+*/
 
 $_params_['actionId']    = $actionId = $this->context->action->id;
 $_params_['actionTitle'] = $actionTitle = Yii::t( 'app', Inflector::camel2words( $this->context->action->id ) );
@@ -18,7 +24,7 @@ $modelTitle = trim( preg_replace( '/(Search|)/', '', $modelTitle ) );
 
 $_params_['modelTitle'] = $modelTitle;
 
-if( 0 && isset($searchModel) && Yii::$app->request->get( $searchModel->formName() ) ){
+if( 0 && isset($ModelSearch) && Yii::$app->request->get( $ModelSearch->formName() ) ){
 	$this->title = Yii::t( 'app', 'Search result') . ": $modelTitle";
 }
 else{

@@ -25,9 +25,12 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		
 		$jsId = $this->controller->jsId;
 		
+		/**
+		 * @var ActiveRecordInterface $ModelSearch
+		 */
 		extract( parent::process() );
 		
-		$Model = $searchModel;
+		$Model = $ModelSearch;
 		
 		$Shema = Yii::$app->db->getSchema();
 		
@@ -41,7 +44,7 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		 * @var \yozh\crud\models\BaseActiveRecord $Model
 		 */
 		if( Yii::$app->request->isNested
-			&& $nestedAttributes = ( Yii::$app->request->queryParams )[ $searchModel->formName() ] ?? []
+			&& $nestedAttributes = ( Yii::$app->request->queryParams )[ $Model->formName() ] ?? []
 		) {
 			$columns = $Model->attributesIndexList( null, array_keys( $nestedAttributes ) );
 		}
@@ -49,53 +52,24 @@ class IndexAction extends \yozh\base\actions\IndexAction
 			$columns = $Model->attributesIndexList();
 		}
 		
-		$attributeReferences = [];
-		if( $Model instanceof ActiveRecordInterface ) {
-			
-			foreach( $Model->shemaReferences() as $refName => $reference ) {
-				foreach( $reference as $fk => $pk ) {
-					$attributeReferences[ $fk ][ $refName ] = $reference;
-				}
-			}
-			
-		}
-		
 		$shemaColumns = $Model->shemaColumns();
 		
 		foreach( $columns as $key => $attributeName ) {
 			
-			if( isset( $attributeReferences[ $attributeName ] ) ) {
+			if( $references = $Model->getAttributeReferences( $attributeName ) ) {
 				
-				foreach( $attributeReferences[ $attributeName ] as $refName => $reference ) {
-					
-					$refAttributes = $Shema->getTableSchema( $reference[0] )->columns;
-					
-					if( isset( $refAttributes['name'] ) ) {
-						$refLabel = 'name';
-					}
-					else if( isset( $refAttributes['title'] ) ) {
-						$refLabel = 'title';
-					}
-					else {
-						$refLabel = $reference[ $attributeName ];
-					}
-					
-					$refQuery = ( new Query() )
-						->select( [ $refLabel, $reference[ $attributeName ] ] )
-						->from( $reference[0] )
-						//->andFilterWhere( $refCondition )
-					;
-					
-					$attributeReferences[ $attributeName ]['items'] = $refQuery->indexBy( $reference[ $attributeName ] )->column();
+				foreach( $references as $refName => $Reference ) {
 					
 					$label = Yii::t( 'app', preg_replace( '/\sId$/', '', Html::encode( $Model->getAttributeLabel( $attributeName ) ) ) );
+					
+					$refItems = $Model->getAttributeReferenceItems( $attributeName, $Reference );
 					
 					$columns[ $key ] = [
 						'attribute' => $attributeName,
 						'label'     => $label,
-						'filter'    => $attributeReferences[ $attributeName ]['items'],
-						'value'     => function( $Model, $key, $index, $widget ) use ( $attributeReferences, $attributeName ) {
-							return $attributeReferences[ $attributeName ]['items'][ $Model->$attributeName ] ?? null;
+						'filter'    => $refItems,
+						'value'     => function( $Model, $key, $index, $widget ) use ( $attributeName, $refItems ) {
+							return $refItems[ $Model->$attributeName ] ?? null;
 						},
 					];
 					
@@ -194,11 +168,11 @@ class IndexAction extends \yozh\base\actions\IndexAction
 		];
 		
 		return [
-			'searchModel'         => $searchModel,
+			'ModelSearch'         => $ModelSearch,
 			'dataProvider'        => $dataProvider,
 			'nestedAttributes'    => $nestedAttributes,
 			'columns'             => &$columns,
-			'attributeReferences' => $attributeReferences,
+			//'attributeReferences' => $attributeReferences,
 		];
 		
 	}
