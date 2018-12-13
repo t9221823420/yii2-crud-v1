@@ -14,7 +14,7 @@ use yozh\crud\widgets\NestedModel;
 
 include __DIR__ . '/_header.php';
 
-$columns = $columns ?? $searchModel->attributesIndexList();
+$columns = $columns ?? $ModelSearch->attributesIndexList();
 
 if( Yii::$app->request->isNested ) {
 	$nestedAttributes[ NestedModel::PARAM_NESTED ] = 1;
@@ -61,8 +61,8 @@ if( Yii::$app->request->isNested ) {
 		'dataProvider' => $dataProvider,
 		'filterModel'  => Yii::$app->request->isNested
                 ? null
-                : $searchModel instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface
-                    ? $searchModel
+                : $ModelSearch instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface
+                    ? $ModelSearch
                     : null,
 		'layout'       => "{items}\n{pager}{limits}",
 		'showHeader'   => $dataProvider->getCount() > 0,

@@ -37,7 +37,8 @@ trait ModelSearchTrait
 		] );
 		
 		// empty($this->getDirtyAttributes()) if loads but nothing changes. it successfuly pass througth validation
-		if( !( $this->load( $params ) && !empty( $this->getDirtyAttributes() ) && $this->validate() ) ) {
+		//if( !( $this->load( $params ) && !empty( $this->getDirtyAttributes() ) && $this->validate() ) ) {
+		if( !( $this->load( $params ) && $this->validate() ) ) {
 			
 			if( Yii::$app->request->isNested ) {
 				$dataProvider->query->where( '1=0' );
@@ -50,9 +51,11 @@ trait ModelSearchTrait
 			$this->_addDefaultFiltersConditions( $query );
 		}
 		
+		$tableName = $query->getRawTableName();
+		
 		$query->andFilterWhere( [ 'or',
-			$this->attributes( [ 'title' ] ) ? [ 'like', 'title', $this->filter_search ] : null,
-			$this->attributes( [ 'name' ] ) ? [ 'like', 'name', $this->filter_search ] : null,
+			$this->attributes( [ 'title' ] ) ? [ 'like', "$tableName.title", $this->filter_search ] : null,
+			$this->attributes( [ 'name' ] ) ? [ 'like', "$tableName.name", $this->filter_search ] : null,
 		] );
 		
 		return $dataProvider;

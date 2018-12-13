@@ -172,7 +172,6 @@ class IndexAction extends \yozh\base\actions\IndexAction
 			'dataProvider'        => $dataProvider,
 			'nestedAttributes'    => $nestedAttributes,
 			'columns'             => &$columns,
-			//'attributeReferences' => $attributeReferences,
 		];
 		
 	}

@@ -65,13 +65,13 @@ AssetBundle::register($this);
 		'method' => 'get',
 	]); ?>
 
-<?php if (property_exists($searchModel, 'filter_search')): ?>
+<?php if (property_exists($ModelSearch, 'filter_search')): ?>
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">
 
         <div class="common-search">
 			
-			<?= $form->field($searchModel, 'filter_search', [
+			<?= $form->field($ModelSearch, 'filter_search', [
 				'options' => [
 					'class' => 'w-50 form-item',
 					'prompt' => Yii::t('app', 'Name'),
@@ -87,7 +87,7 @@ AssetBundle::register($this);
 
 <?php endif; ?>
 
-<?php if ($fields = $fields($form, $searchModel)): ?>
+<?php if ($fields = $fields($form, $ModelSearch)): ?>
 
     <div class="w-100 valign-bottom-container inline-block-container form-group">
 		

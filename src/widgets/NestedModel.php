@@ -50,13 +50,12 @@ class NestedModel extends Widget
 	 */
 	public $bodyContent;
 	
-	
 	/**
 	 * Renders the widget.
 	 */
 	public function run()
 	{
-		$options = $this->options;
+		$options = $this->options ?? [];
 		
 		$Model = $this->model;
 		
