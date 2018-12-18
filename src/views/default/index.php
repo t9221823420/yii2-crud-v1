@@ -50,9 +50,9 @@ if( Yii::$app->request->isNested ) {
 				'label'   => Yii::t( 'app', 'Add' ),
 				'action'  => $jsId . '.create',
 				'data'    => $nestedAttributes ?? [],
-                'options' => [
-	                'data-pjax' => 0,
-                ],
+				'options' => [
+					'data-pjax' => 0,
+				],
 			] ),
 		] ); ?>
     </p>
@@ -60,14 +60,18 @@ if( Yii::$app->request->isNested ) {
 	<?= GridView::widget( [
 		'dataProvider' => $dataProvider,
 		'filterModel'  => Yii::$app->request->isNested
-                ? null
-                : $ModelSearch instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface
-                    ? $ModelSearch
-                    : null,
+			? null
+			: $ModelSearch instanceof \yozh\base\interfaces\models\ActiveRecordSearchInterface
+				? $ModelSearch
+				: null,
 		'layout'       => "{items}\n{pager}{limits}",
 		'showHeader'   => $dataProvider->getCount() > 0,
 		'tableOptions' => [
 			'class' => 'table table-striped table-hover',
+		],
+		'formatter'    => [
+			'class'       => yii\i18n\Formatter::class,
+			'nullDisplay' => '-',
 		],
 		
 		'columns' => $columns,
@@ -79,6 +83,7 @@ if( Yii::$app->request->isNested ) {
 		'jsId'    => $jsId,
 		'modalId' => $modalId,
 		'pjaxId'  => $pjaxId,
+		'parentViewPath'  => $parentViewPath ?? '@yozh/crud/views/default',
 	] ), $this::POS_END ); ?>
 	
 	<?php Pjax::end(); ?>

@@ -3,11 +3,10 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-include __DIR__ . '/_header.php';
-
-include( Yii::getAlias($parentViewPath . DIRECTORY_SEPARATOR  . basename( __FILE__ ) ) );
+include( Yii::getAlias( $parentViewPath . DIRECTORY_SEPARATOR . basename( __FILE__ ) ) );
 
 ?>
+
 <?php if( $printTags ?? false ) : ?>
 <script type='text/javascript'><?php endif; ?>
 	
@@ -22,4 +21,6 @@ include( Yii::getAlias($parentViewPath . DIRECTORY_SEPARATOR  . basename( __FILE
 	<?php break; default: ?>
 	
 	<?php endswitch; ?>
-	<?php if( $printTags ?? false ) : ?></script><?php endif; ?>
+	
+	<?php if( $printTags ?? false ) : ?>
+</script><?php endif; ?>
